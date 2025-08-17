@@ -1,0 +1,1298 @@
+[
+  {
+    "id": "1",
+    "overallRank": 1,
+    "position": "WR",
+    "positionRank": 1,
+    "name": "Ja'Marr Chase",
+    "teamAbbr": "CIN",
+    "byeWeek": 10,
+    "yearsPro": 4,
+    "newTeam": false,
+    "role": "Alpha X",
+    "competitionLevel": "Medium",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "receiving": {
+            "receptions": 102,
+            "yards": 1385,
+            "touchdowns": 10,
+            "targets": 155,
+            "firstDowns": 72,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 35,
+            "touchdowns": 0,
+            "attempts": 7,
+            "firstDowns": 2,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "receiving": {
+            "receptions": 96,
+            "yards": 1327,
+            "touchdowns": 9,
+            "targets": 145,
+            "firstDowns": 65,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 28,
+            "touchdowns": 0,
+            "attempts": 6,
+            "firstDowns": 2,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 4,
+            "bustGames": 2
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "receiving": {
+            "receptions": 95,
+            "yards": 1262,
+            "touchdowns": 7,
+            "targets": 136,
+            "firstDowns": 60,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 22,
+            "touchdowns": 0,
+            "attempts": 5,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 5,
+            "bustGames": 3
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "2",
+    "overallRank": 2,
+    "position": "RB",
+    "positionRank": 1,
+    "name": "Bijan Robinson",
+    "teamAbbr": "ATL",
+    "byeWeek": 5,
+    "yearsPro": 1,
+    "newTeam": false,
+    "role": "Dual-Threat RB",
+    "competitionLevel": "Low",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "rushing": {
+            "yards": 1295,
+            "touchdowns": 10,
+            "attempts": 262,
+            "firstDowns": 74,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "receiving": {
+            "receptions": 67,
+            "yards": 526,
+            "touchdowns": 3,
+            "targets": 80,
+            "firstDowns": 31,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "rushing": {
+            "yards": 1161,
+            "touchdowns": 8,
+            "attempts": 214,
+            "firstDowns": 61,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 58,
+            "yards": 487,
+            "touchdowns": 2,
+            "targets": 74,
+            "firstDowns": 24,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 5,
+            "bustGames": 3
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "rushing": {
+            "yards": 975,
+            "touchdowns": 4,
+            "attempts": 214,
+            "firstDowns": 54,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 37,
+            "yards": 294,
+            "touchdowns": 2,
+            "targets": 49,
+            "firstDowns": 15,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 3,
+            "bustGames": 4
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "3",
+    "overallRank": 3,
+    "position": "WR",
+    "positionRank": 2,
+    "name": "Justin Jefferson",
+    "teamAbbr": "MIN",
+    "byeWeek": 6,
+    "yearsPro": 4,
+    "newTeam": false,
+    "role": "Alpha X",
+    "competitionLevel": "Medium",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "receiving": {
+            "receptions": 112,
+            "yards": 1660,
+            "touchdowns": 11,
+            "targets": 170,
+            "firstDowns": 79,
+            "40PlusTDs": 3,
+            "50PlusTDs": 2,
+            "200PlusGames": 2
+          },
+          "rushing": {
+            "yards": 12,
+            "touchdowns": 0,
+            "attempts": 3,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "receiving": {
+            "receptions": 101,
+            "yards": 1429,
+            "touchdowns": 9,
+            "targets": 153,
+            "firstDowns": 71,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 9,
+            "touchdowns": 0,
+            "attempts": 2,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 6,
+            "bustGames": 2
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 14,
+          "gamesStarted": 14,
+          "receiving": {
+            "receptions": 87,
+            "yards": 1330,
+            "touchdowns": 8,
+            "targets": 124,
+            "firstDowns": 55,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 7,
+            "touchdowns": 0,
+            "attempts": 2,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 4,
+            "bustGames": 2
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "4",
+    "overallRank": 4,
+    "position": "RB",
+    "positionRank": 2,
+    "name": "Saquon Barkley",
+    "teamAbbr": "PHI",
+    "byeWeek": 9,
+    "yearsPro": 6,
+    "newTeam": true,
+    "role": "Dual-Threat RB",
+    "competitionLevel": "Low",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "rushing": {
+            "yards": 1120,
+            "touchdowns": 8,
+            "attempts": 255,
+            "firstDowns": 61,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 56,
+            "yards": 478,
+            "touchdowns": 3,
+            "targets": 70,
+            "firstDowns": 22,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "rushing": {
+            "yards": 1082,
+            "touchdowns": 7,
+            "attempts": 247,
+            "firstDowns": 59,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 50,
+            "yards": 425,
+            "touchdowns": 2,
+            "targets": 62,
+            "firstDowns": 21,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 3,
+            "bustGames": 2
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 15,
+          "rushing": {
+            "yards": 962,
+            "touchdowns": 6,
+            "attempts": 242,
+            "firstDowns": 53,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 41,
+            "yards": 332,
+            "touchdowns": 1,
+            "targets": 46,
+            "firstDowns": 15,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 2,
+            "bustGames": 4
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "5",
+    "overallRank": 5,
+    "position": "RB",
+    "positionRank": 3,
+    "name": "Jahmyr Gibbs",
+    "teamAbbr": "DET",
+    "byeWeek": 8,
+    "yearsPro": 1,
+    "newTeam": false,
+    "role": "Dual-Threat RB",
+    "competitionLevel": "High",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 17,
+          "gamesStarted": 16,
+          "rushing": {
+            "yards": 1050,
+            "touchdowns": 7,
+            "attempts": 190,
+            "firstDowns": 52,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 55,
+            "yards": 410,
+            "touchdowns": 3,
+            "targets": 70,
+            "firstDowns": 17,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 15,
+          "gamesStarted": 13,
+          "rushing": {
+            "yards": 945,
+            "touchdowns": 7,
+            "attempts": 174,
+            "firstDowns": 46,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 42,
+            "yards": 345,
+            "touchdowns": 2,
+            "targets": 55,
+            "firstDowns": 14,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 2,
+            "bustGames": 5
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 15,
+          "gamesStarted": 11,
+          "rushing": {
+            "yards": 872,
+            "touchdowns": 6,
+            "attempts": 149,
+            "firstDowns": 38,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 41,
+            "yards": 316,
+            "touchdowns": 1,
+            "targets": 52,
+            "firstDowns": 10,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 1,
+            "bustGames": 3
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "6",
+    "overallRank": 6,
+    "position": "WR",
+    "positionRank": 3,
+    "name": "CeeDee Lamb",
+    "teamAbbr": "DAL",
+    "byeWeek": 10,
+    "yearsPro": 4,
+    "newTeam": false,
+    "role": "Alpha X",
+    "competitionLevel": "Low",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "receiving": {
+            "receptions": 108,
+            "yards": 1555,
+            "touchdowns": 11,
+            "targets": 170,
+            "firstDowns": 75,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 2
+          },
+          "rushing": {
+            "yards": 68,
+            "touchdowns": 1,
+            "attempts": 10,
+            "firstDowns": 4,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "receiving": {
+            "receptions": 114,
+            "yards": 1701,
+            "touchdowns": 12,
+            "targets": 179,
+            "firstDowns": 80,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 2
+          },
+          "rushing": {
+            "yards": 71,
+            "touchdowns": 1,
+            "attempts": 11,
+            "firstDowns": 4,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 6,
+            "bustGames": 1
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "receiving": {
+            "receptions": 107,
+            "yards": 1359,
+            "touchdowns": 9,
+            "targets": 156,
+            "firstDowns": 66,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 57,
+            "touchdowns": 1,
+            "attempts": 8,
+            "firstDowns": 3,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 5,
+            "bustGames": 2
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "7",
+    "overallRank": 7,
+    "position": "RB",
+    "positionRank": 4,
+    "name": "Christian McCaffrey",
+    "teamAbbr": "SF",
+    "byeWeek": 14,
+    "yearsPro": 7,
+    "newTeam": false,
+    "role": "Dual-Threat RB",
+    "competitionLevel": "Low",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "rushing": {
+            "yards": 1260,
+            "touchdowns": 10,
+            "attempts": 272,
+            "firstDowns": 65,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 67,
+            "yards": 586,
+            "touchdowns": 5,
+            "targets": 76,
+            "firstDowns": 30,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 12,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 1,
+            "attempts": 1,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "rushing": {
+            "yards": 1436,
+            "touchdowns": 12,
+            "attempts": 272,
+            "firstDowns": 70,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "receiving": {
+            "receptions": 67,
+            "yards": 564,
+            "touchdowns": 7,
+            "targets": 78,
+            "firstDowns": 34,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 7,
+            "bustGames": 1
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "rushing": {
+            "yards": 1459,
+            "touchdowns": 13,
+            "attempts": 272,
+            "firstDowns": 73,
+            "40PlusTDs": 2,
+            "50PlusTDs": 1,
+            "200PlusGames": 0
+          },
+          "receiving": {
+            "receptions": 67,
+            "yards": 564,
+            "touchdowns": 7,
+            "targets": 78,
+            "firstDowns": 34,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 12,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 1,
+            "attempts": 1,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 6,
+            "bustGames": 2
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "8",
+    "overallRank": 8,
+    "position": "WR",
+    "positionRank": 4,
+    "name": "Puka Nacua",
+    "teamAbbr": "LAR",
+    "byeWeek": 8,
+    "yearsPro": 2,
+    "newTeam": false,
+    "role": "Alpha X",
+    "competitionLevel": "Medium",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "receiving": {
+            "receptions": 104,
+            "yards": 1380,
+            "touchdowns": 8,
+            "targets": 162,
+            "firstDowns": 69,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 24,
+            "touchdowns": 0,
+            "attempts": 4,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "receiving": {
+            "receptions": 105,
+            "yards": 1432,
+            "touchdowns": 8,
+            "targets": 163,
+            "firstDowns": 70,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 31,
+            "touchdowns": 0,
+            "attempts": 6,
+            "firstDowns": 2,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 4,
+            "bustGames": 3
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 17,
+          "gamesStarted": 15,
+          "receiving": {
+            "receptions": 105,
+            "yards": 1486,
+            "touchdowns": 6,
+            "targets": 161,
+            "firstDowns": 71,
+            "40PlusTDs": 1,
+            "50PlusTDs": 1,
+            "200PlusGames": 1
+          },
+          "rushing": {
+            "yards": 23,
+            "touchdowns": 0,
+            "attempts": 4,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 4,
+            "bustGames": 4
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "9",
+    "overallRank": 9,
+    "position": "WR",
+    "positionRank": 5,
+    "name": "Malik Nabers",
+    "teamAbbr": "NYG",
+    "byeWeek": 14,
+    "yearsPro": 0,
+    "newTeam": false,
+    "role": "Slot WR",
+    "competitionLevel": "High",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "receiving": {
+            "receptions": 92,
+            "yards": 1164,
+            "touchdowns": 7,
+            "targets": 134,
+            "firstDowns": 55,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "rushing": {
+            "yards": 8,
+            "touchdowns": 0,
+            "attempts": 1,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {}
+      },
+      "2023": {
+        "actual": {}
+      }
+    }
+  },
+  {
+    "id": "10",
+    "overallRank": 10,
+    "position": "WR",
+    "positionRank": 6,
+    "name": "Amon-Ra St. Brown",
+    "teamAbbr": "DET",
+    "byeWeek": 8,
+    "yearsPro": 3,
+    "newTeam": false,
+    "role": "Slot WR",
+    "competitionLevel": "High",
+    "attributes": [],
+    "riskScore": null,
+    "stats": {
+      "2025": {
+        "predicted": {
+          "gamesPlayed": 17,
+          "gamesStarted": 17,
+          "receiving": {
+            "receptions": 112,
+            "yards": 1325,
+            "touchdowns": 10,
+            "targets": 151,
+            "firstDowns": 61,
+            "40PlusTDs": 2,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "rushing": {
+            "yards": 39,
+            "touchdowns": 0,
+            "attempts": 7,
+            "firstDowns": 2,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": null,
+            "bustGames": null
+          }
+        }
+      },
+      "2024": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "receiving": {
+            "receptions": 119,
+            "yards": 1456,
+            "touchdowns": 9,
+            "targets": 160,
+            "firstDowns": 65,
+            "40PlusTDs": 1,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "rushing": {
+            "yards": 34,
+            "touchdowns": 0,
+            "attempts": 6,
+            "firstDowns": 2,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 5,
+            "bustGames": 2
+          }
+        }
+      },
+      "2023": {
+        "actual": {
+          "gamesPlayed": 16,
+          "gamesStarted": 16,
+          "receiving": {
+            "receptions": 106,
+            "yards": 1161,
+            "touchdowns": 6,
+            "targets": 140,
+            "firstDowns": 53,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "rushing": {
+            "yards": 28,
+            "touchdowns": 0,
+            "attempts": 5,
+            "firstDowns": 1,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "200PlusGames": 0
+          },
+          "passing": {
+            "yards": 0,
+            "touchdowns": 0,
+            "interceptions": 0,
+            "completions": 0,
+            "attempts": 0,
+            "firstDowns": 0,
+            "40PlusTDs": 0,
+            "50PlusTDs": 0,
+            "400PlusGames": 0
+          },
+          "boomBust": {
+            "boomGames": 4,
+            "bustGames": 3
+          }
+        }
+      }
+    }
+  }
+]

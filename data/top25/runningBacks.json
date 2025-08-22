@@ -1,0 +1,305 @@
+[
+  {
+    "name": "Christian McCaffrey",
+    "previousOverallDraftRank": 7,
+    "newOverallDraftRank": 1,
+    "positionDraftRank": 1,
+    "position": "RB",
+    "team": "SF",
+    "aiNotes": [
+      "RB1 workload intact; 49ers depth chart lists only role players behind him (Mitchell departed), so touch share stays elite.",
+      "49ers OL ranks mid-pack (not elite), but CMC’s usage/versatility mitigates line variance.",
+      "Input order/previous rank confirmed from your uploaded ESPN list."
+    ]
+  },
+  {
+    "name": "Bijan Robinson",
+    "previousOverallDraftRank": 2,
+    "newOverallDraftRank": 2,
+    "positionDraftRank": 2,
+    "position": "RB",
+    "team": "ATL",
+    "aiNotes": [
+      "OC Zac Robinson’s scheme has Atlanta’s offense trending up; camp reports point to a more dynamic unit vs. 2023 usage.",
+      "RT Kaleb McGary’s hamstring issue dinged the OL in camp (monitor), but expectation is short-term."
+    ]
+  },
+  {
+    "name": "Saquon Barkley",
+    "previousOverallDraftRank": 4,
+    "newOverallDraftRank": 3,
+    "positionDraftRank": 3,
+    "position": "RB",
+    "team": "PHI",
+    "aiNotes": [
+      "Best-in-NFL OL entering 2025 boosts efficiency/TD odds.",
+      "‘Brotherly Shove’ remains legal—goal-line equity intact.",
+      "New OC Kevin Patullo keeps continuity with Sirianni structure."
+    ]
+  },
+  {
+    "name": "Breece Hall",
+    "previousOverallDraftRank": 51,
+    "newOverallDraftRank": 4,
+    "positionDraftRank": 4,
+    "position": "RB",
+    "team": "NYJ",
+    "aiNotes": [
+      "Jets want Hall to be a centerpiece; heavy pass-game involvement expected.",
+      "OL upgraded with rookie/veteran adds; overall unit projects league-average."
+    ]
+  },
+  {
+    "name": "Jahmyr Gibbs",
+    "previousOverallDraftRank": 5,
+    "newOverallDraftRank": 5,
+    "positionDraftRank": 5,
+    "position": "RB",
+    "team": "DET",
+    "aiNotes": [
+      "Ben Johnson left; John Morton is OC, but early-camp usage shows Gibbs moved all over and featured in pass game.",
+      "Elite OL (top-3) sustains efficiency."
+    ]
+  },
+  {
+    "name": "Derrick Henry",
+    "previousOverallDraftRank": 19,
+    "newOverallDraftRank": 6,
+    "positionDraftRank": 6,
+    "position": "RB",
+    "team": "BAL",
+    "aiNotes": [
+      "Entrenched as RB1 in Monken’s high-scoring offense; depth chart corroborates.",
+      "Solid OL (top-10) and Lamar-led red-zone volume support TD ceiling."
+    ]
+  },
+  {
+    "name": "Josh Jacobs",
+    "previousOverallDraftRank": 18,
+    "newOverallDraftRank": 7,
+    "positionDraftRank": 7,
+    "position": "RB",
+    "team": "GB",
+    "aiNotes": [
+      "Clear lead back on the depth chart.",
+      "Top-10 OL in LaFleur’s balanced scheme helps efficiency."
+    ]
+  },
+  {
+    "name": "Jonathan Taylor",
+    "previousOverallDraftRank": 17,
+    "newOverallDraftRank": 8,
+    "positionDraftRank": 8,
+    "position": "RB",
+    "team": "IND",
+    "aiNotes": [
+      "Centerpiece of Shane Steichen’s ground game regardless of QB, per local camp coverage.",
+      "OL projects below elite; plan for some volatility."
+    ]
+  },
+  {
+    "name": "David Montgomery",
+    "previousOverallDraftRank": 67,
+    "newOverallDraftRank": 9,
+    "positionDraftRank": 9,
+    "position": "RB",
+    "team": "DET",
+    "aiNotes": [
+      "Lions still using Gibbs heavily as a receiver and both backs together—Monty’s GL/short-yardage role remains valuable.",
+      "Top-3 OL sustains rushing efficiency and red-zone success."
+    ]
+  },
+  {
+    "name": "De'Von Achane",
+    "previousOverallDraftRank": 12,
+    "newOverallDraftRank": 10,
+    "positionDraftRank": 10,
+    "position": "RB",
+    "team": "MIA",
+    "aiNotes": [
+      "Explosive role but committee persists with Mostert; 1A/1B dynamic.",
+      "Minor calf issue popped up in camp—no long-term concern noted, but monitor.",
+      "Miami OL projects bottom-tier again, adding week-to-week variance."
+    ]
+  },
+  {
+    "name": "Kyren Williams",
+    "previousOverallDraftRank": 32,
+    "newOverallDraftRank": 11,
+    "positionDraftRank": 11,
+    "position": "RB",
+    "team": "LAR",
+    "aiNotes": [
+      "Blake Corum is real competition; Rams framing this as a true RB duo.",
+      "Depth chart still lists Kyren atop, but McVay has emphasized health management."
+    ]
+  },
+  {
+    "name": "Chuba Hubbard",
+    "previousOverallDraftRank": 42,
+    "newOverallDraftRank": 12,
+    "positionDraftRank": 12,
+    "position": "RB",
+    "team": "CAR",
+    "aiNotes": [
+      "Jonathon Brooks out for 2025; Hubbard profiles as clear lead early.",
+      "Depth chart supports lead role (Dowdle behind)."
+    ]
+  },
+  {
+    "name": "Aaron Jones",
+    "previousOverallDraftRank": 68,
+    "newOverallDraftRank": 13,
+    "positionDraftRank": 13,
+    "position": "RB",
+    "team": "MIN",
+    "aiNotes": [
+      "Listed RB1 with strong OL (top-5) under O’Connell.",
+      "QB J.J. McCarthy set to start; offense expected to stay balanced."
+    ]
+  },
+  {
+    "name": "Tony Pollard",
+    "previousOverallDraftRank": 70,
+    "newOverallDraftRank": 14,
+    "positionDraftRank": 14,
+    "position": "RB",
+    "team": "TEN",
+    "aiNotes": [
+      "RB1 on early depth charts; Tyjae Spears injury/PUP watch (monitor).",
+      "OL still a concern (bottom-half), capping ceiling a bit."
+    ]
+  },
+  {
+    "name": "Bucky Irving",
+    "previousOverallDraftRank": 22,
+    "newOverallDraftRank": 15,
+    "positionDraftRank": 15,
+    "position": "RB",
+    "team": "TB",
+    "aiNotes": [
+      "Team depth charts list Irving over Rachaad White heading into Week 1 (role could be fluid).",
+      "Top-5 OL gives a friendly runway if he holds lead duties."
+    ]
+  },
+  {
+    "name": "Chase Brown",
+    "previousOverallDraftRank": 23,
+    "newOverallDraftRank": 16,
+    "positionDraftRank": 16,
+    "position": "RB",
+    "team": "CIN",
+    "aiNotes": [
+      "Listed RB1 after Zack Moss exit/injury; coaches leaning into him.",
+      "OL ranks near bottom—volume helps, but efficiency risk remains."
+    ]
+  },
+  {
+    "name": "James Cook",
+    "previousOverallDraftRank": 33,
+    "newOverallDraftRank": 17,
+    "positionDraftRank": 17,
+    "position": "RB",
+    "team": "BUF",
+    "aiNotes": [
+      "Locked in atop depth chart; Ray Davis complements (likely GL mix).",
+      "Strong OL aids consistency."
+    ]
+  },
+  {
+    "name": "Kenneth Walker III",
+    "previousOverallDraftRank": 38,
+    "newOverallDraftRank": 18,
+    "positionDraftRank": 18,
+    "position": "RB",
+    "team": "SEA",
+    "aiNotes": [
+      "Still lead back, but Kubiak favors balance and Charbonnet siphons work.",
+      "OL projects bottom-3—expect some volatility."
+    ]
+  },
+  {
+    "name": "Alvin Kamara",
+    "previousOverallDraftRank": 41,
+    "newOverallDraftRank": 19,
+    "positionDraftRank": 19,
+    "position": "RB",
+    "team": "NO",
+    "aiNotes": [
+      "Crowded room (Kendre Miller, Devin Neal, etc.) lowers bell-cow odds.",
+      "Saints’ OL projects bottom-third, denting rushing efficiency."
+    ]
+  },
+  {
+    "name": "James Conner",
+    "previousOverallDraftRank": 43,
+    "newOverallDraftRank": 20,
+    "positionDraftRank": 20,
+    "position": "RB",
+    "team": "ARI",
+    "aiNotes": [
+      "Still atop depth chart, but Trey Benson’s second year is real competition for touches.",
+      "OL improved into the middle tier—not a liability."
+    ]
+  },
+  {
+    "name": "Ashton Jeanty",
+    "previousOverallDraftRank": 11,
+    "newOverallDraftRank": 21,
+    "positionDraftRank": 21,
+    "position": "RB",
+    "team": "LV",
+    "aiNotes": [
+      "Rookie profile with uncertain immediate share; depth charts show a committee forming.",
+      "Raiders OL ranks bottom-third; not a plus environment early."
+    ]
+  },
+  {
+    "name": "TreVeyon Henderson",
+    "previousOverallDraftRank": 44,
+    "newOverallDraftRank": 22,
+    "positionDraftRank": 22,
+    "position": "RB",
+    "team": "NE",
+    "aiNotes": [
+      "Generating major camp buzz as a rookie playmaker.",
+      "Still behind Rhamondre Stevenson on the current depth chart."
+    ]
+  },
+  {
+    "name": "D'Andre Swift",
+    "previousOverallDraftRank": 52,
+    "newOverallDraftRank": 23,
+    "positionDraftRank": 23,
+    "position": "RB",
+    "team": "CHI",
+    "aiNotes": [
+      "Bears OL projects top-10; favorable environment under new HC Ben Johnson.",
+      "Committee risk remains with Roschon Johnson/others."
+    ]
+  },
+  {
+    "name": "RJ Harvey",
+    "previousOverallDraftRank": 71,
+    "newOverallDraftRank": 24,
+    "positionDraftRank": 24,
+    "position": "RB",
+    "team": "DEN",
+    "aiNotes": [
+      "Behind J.K. Dobbins on the depth chart to open.",
+      "Potential OL tailwind if he climbs the ladder during the season."
+    ]
+  },
+  {
+    "name": "Omarion Hampton",
+    "previousOverallDraftRank": 37,
+    "newOverallDraftRank": 25,
+    "positionDraftRank": 25,
+    "position": "RB",
+    "team": "LAC",
+    "aiNotes": [
+      "Currently behind Najee Harris on the Chargers’ depth chart.",
+      "OL is strong (top-6), but near-term workload looks limited without a Harris setback."
+    ]
+  }
+]

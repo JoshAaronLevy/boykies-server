@@ -1,0 +1,422 @@
+[
+  {
+    "name": "Christian McCaffrey",
+    "position": "RB",
+    "newOverallRank": 1,
+    "reason": "RB1. Dual-Threat RB for SF; proj 1100 rush yds/10 TD with 60 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Justin Jefferson",
+    "position": "WR",
+    "newOverallRank": 2,
+    "reason": "WR1. Alpha X for MIN; proj 112 rec/1550 yds/11 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Bijan Robinson",
+    "position": "RB",
+    "newOverallRank": 3,
+    "reason": "RB2. Dual-Threat RB for ATL; proj 1295 rush yds/10 TD with 67 rec. Low competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Ja'Marr Chase",
+    "position": "WR",
+    "newOverallRank": 4,
+    "reason": "WR2. Alpha X for CIN; proj 121 rec/1575 yds/12 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Saquon Barkley",
+    "position": "RB",
+    "newOverallRank": 5,
+    "reason": "RB3. Workhorse RB for PHI; proj 1675 rush yds/12 TD with 45 rec. Low competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "CeeDee Lamb",
+    "position": "WR",
+    "newOverallRank": 6,
+    "reason": "WR3. Alpha X for DAL; proj 115 rec/1450 yds/10 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Breece Hall",
+    "position": "RB",
+    "newOverallRank": 7,
+    "reason": "RB4. Dual-Threat RB for NYJ; proj 1180 rush yds/9 TD with 62 rec. Low competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Amon-Ra St. Brown",
+    "position": "WR",
+    "newOverallRank": 8,
+    "reason": "WR4. Slot WR for DET; proj 115 rec/1350 yds/10 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Jahmyr Gibbs",
+    "position": "RB",
+    "newOverallRank": 9,
+    "reason": "RB5. Dual-Threat RB for DET; proj 1300 rush yds/10 TD with 60 rec. Low competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Tyreek Hill",
+    "position": "WR",
+    "newOverallRank": 10,
+    "reason": "WR5. Alpha X for MIA; proj 105 rec/1450 yds/10 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Josh Allen",
+    "position": "QB",
+    "newOverallRank": 11,
+    "reason": "QB1. Proj 4100 pass yds/33 TD/12 INT, 600 rush yds/9 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Derrick Henry",
+    "position": "RB",
+    "newOverallRank": 12,
+    "reason": "RB6. Workhorse RB for BAL; proj 1400 rush yds/12 TD with 20 rec. Low competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Puka Nacua",
+    "position": "WR",
+    "newOverallRank": 13,
+    "reason": "WR6. Perimeter WR for LAR; proj 100 rec/1300 yds/8 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Lamar Jackson",
+    "position": "QB",
+    "newOverallRank": 14,
+    "reason": "QB2. Proj 3900 pass yds/30 TD/8 INT, 900 rush yds/6 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Josh Jacobs",
+    "position": "RB",
+    "newOverallRank": 15,
+    "reason": "RB7. Workhorse RB for GB; proj 1300 rush yds/12 TD with 40 rec. Low competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "A.J. Brown",
+    "position": "WR",
+    "newOverallRank": 16,
+    "reason": "WR7. Alpha X for PHI; proj 100 rec/1450 yds/10 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Jonathan Taylor",
+    "position": "RB",
+    "newOverallRank": 17,
+    "reason": "RB8. Workhorse RB for IND; proj 1350 rush yds/12 TD with 28 rec. Low competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Patrick Mahomes",
+    "position": "QB",
+    "newOverallRank": 18,
+    "reason": "QB3. Proj 4600 pass yds/34 TD/12 INT, 350 rush yds/3 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Garrett Wilson",
+    "position": "WR",
+    "newOverallRank": 19,
+    "reason": "WR8. Alpha X for NYJ; proj 108 rec/1280 yds/9 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Davante Adams",
+    "position": "WR",
+    "newOverallRank": 20,
+    "reason": "WR9. Alpha X for LAR; proj 100 rec/1200 yds/9 TD. Low competition; elite target share."
+  },
+  {
+    "name": "David Montgomery",
+    "position": "RB",
+    "newOverallRank": 21,
+    "reason": "RB9. Committee RB for DET; proj 1000 rush yds/10 TD with 24 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Jalen Hurts",
+    "position": "QB",
+    "newOverallRank": 22,
+    "reason": "QB4. Proj 3850 pass yds/26 TD/9 INT, 700 rush yds/12 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "De'Von Achane",
+    "position": "RB",
+    "newOverallRank": 23,
+    "reason": "RB10. Dual-Threat RB for MIA; proj 1050 rush yds/8 TD with 65 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Nico Collins",
+    "position": "WR",
+    "newOverallRank": 24,
+    "reason": "WR10. Alpha X for HOU; proj 92 rec/1310 yds/9 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Joe Burrow",
+    "position": "QB",
+    "newOverallRank": 25,
+    "reason": "QB5. Proj 4700 pass yds/36 TD/12 INT, 220 rush yds/3 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Drake London",
+    "position": "WR",
+    "newOverallRank": 26,
+    "reason": "WR11. Alpha X for ATL; proj 108 rec/1450 yds/10 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Kyren Williams",
+    "position": "RB",
+    "newOverallRank": 27,
+    "reason": "RB11. Workhorse RB for LAR; proj 1280 rush yds/12 TD with 36 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Kyler Murray",
+    "position": "QB",
+    "newOverallRank": 28,
+    "reason": "QB6. Proj 4200 pass yds/26 TD/11 INT, 650 rush yds/6 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Chuba Hubbard",
+    "position": "RB",
+    "newOverallRank": 29,
+    "reason": "RB12. Workhorse RB for CAR; proj 1080 rush yds/8 TD with 40 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Mike Evans",
+    "position": "WR",
+    "newOverallRank": 30,
+    "reason": "WR12. Perimeter WR for TB; proj 72 rec/1050 yds/10 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Malik Nabers",
+    "position": "WR",
+    "newOverallRank": 31,
+    "reason": "WR13. Alpha X for NYG; proj 105 rec/1300 yds/8 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Jayden Daniels",
+    "position": "QB",
+    "newOverallRank": 32,
+    "reason": "QB7. Proj 3800 pass yds/26 TD/11 INT, 800 rush yds/7 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Aaron Jones",
+    "position": "RB",
+    "newOverallRank": 33,
+    "reason": "RB13. Dual-Threat RB for MIN; proj 1050 rush yds/7 TD with 45 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Jaxon Smith-Njigba",
+    "position": "WR",
+    "newOverallRank": 34,
+    "reason": "WR14. Slot WR for SEA; proj 102 rec/1205 yds/8 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Tony Pollard",
+    "position": "RB",
+    "newOverallRank": 35,
+    "reason": "RB14. Workhorse RB for TEN; proj 1000 rush yds/7 TD with 45 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Caleb Williams",
+    "position": "QB",
+    "newOverallRank": 36,
+    "reason": "QB8. Proj 3800 pass yds/24 TD/12 INT, 500 rush yds/3 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Ladd McConkey",
+    "position": "WR",
+    "newOverallRank": 37,
+    "reason": "WR15. Slot WR for LAC; proj 100 rec/1250 yds/8 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Bucky Irving",
+    "position": "RB",
+    "newOverallRank": 38,
+    "reason": "RB15. Dual-Threat RB for TB; proj 1200 rush yds/10 TD with 50 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Justin Herbert",
+    "position": "QB",
+    "newOverallRank": 39,
+    "reason": "QB9. Proj 4400 pass yds/30 TD/11 INT, 250 rush yds/3 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Chase Brown",
+    "position": "RB",
+    "newOverallRank": 40,
+    "reason": "RB16. Workhorse RB for CIN; proj 1300 rush yds/10 TD with 55 rec. Low competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Tee Higgins",
+    "position": "WR",
+    "newOverallRank": 41,
+    "reason": "WR16. Perimeter WR for CIN; proj 85 rec/1125 yds/9 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Dak Prescott",
+    "position": "QB",
+    "newOverallRank": 42,
+    "reason": "QB10. Proj 3800 pass yds/26 TD/10 INT, 180 rush yds/2 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Brian Thomas Jr.",
+    "position": "WR",
+    "newOverallRank": 43,
+    "reason": "WR17. Vertical Threat for JAX; proj 88 rec/1275 yds/9 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "James Cook",
+    "position": "RB",
+    "newOverallRank": 44,
+    "reason": "RB17. Dual-Threat RB for BUF; proj 1125 rush yds/6 TD with 35 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Marvin Harrison Jr.",
+    "position": "WR",
+    "newOverallRank": 45,
+    "reason": "WR18. Alpha X for ARI; proj 85 rec/1200 yds/10 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Brock Purdy",
+    "position": "QB",
+    "newOverallRank": 46,
+    "reason": "QB11. Proj 4300 pass yds/31 TD/10 INT, 280 rush yds/3 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Kenneth Walker III",
+    "position": "RB",
+    "newOverallRank": 47,
+    "reason": "RB18. Explosive RB for SEA; proj 960 rush yds/9 TD with 35 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "DJ Moore",
+    "position": "WR",
+    "newOverallRank": 48,
+    "reason": "WR19. Alpha X for CHI; proj 95 rec/1100 yds/7 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Tua Tagovailoa",
+    "position": "QB",
+    "newOverallRank": 49,
+    "reason": "QB12. Proj 4150 pass yds/26 TD/12 INT. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Alvin Kamara",
+    "position": "RB",
+    "newOverallRank": 50,
+    "reason": "RB19. Dual-Threat RB for NO; proj 900 rush yds/6 TD with 65 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Zay Flowers",
+    "position": "WR",
+    "newOverallRank": 51,
+    "reason": "WR20. Perimeter WR for BAL; proj 88 rec/1110 yds/7 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "James Conner",
+    "position": "RB",
+    "newOverallRank": 52,
+    "reason": "RB20. Workhorse RB for ARI; proj 980 rush yds/7 TD with 38 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Jordan Love",
+    "position": "QB",
+    "newOverallRank": 53,
+    "reason": "QB13. Proj 3950 pass yds/29 TD/12 INT, 150 rush yds/2 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Xavier Worthy",
+    "position": "WR",
+    "newOverallRank": 54,
+    "reason": "WR21. Vertical Threat for KC; proj 80 rec/1050 yds/8 TD. High competition; elite target share."
+  },
+  {
+    "name": "Ashton Jeanty",
+    "position": "RB",
+    "newOverallRank": 55,
+    "reason": "RB21. Dual-Threat RB for LV; proj 1150 rush yds/9 TD with 44 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Terry McLaurin",
+    "position": "WR",
+    "newOverallRank": 56,
+    "reason": "WR22. Alpha X for WSH; proj 95 rec/1220 yds/10 TD. Low competition; elite target share."
+  },
+  {
+    "name": "Jared Goff",
+    "position": "QB",
+    "newOverallRank": 57,
+    "reason": "QB14. Proj 4300 pass yds/30 TD/11 INT, 30 rush yds/1 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "TreVeyon Henderson",
+    "position": "RB",
+    "newOverallRank": 58,
+    "reason": "RB22. Committee RB for NE; proj 750 rush yds/6 TD with 35 rec. High competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "DK Metcalf",
+    "position": "WR",
+    "newOverallRank": 59,
+    "reason": "WR23. Alpha X for PIT; proj 70 rec/1020 yds/8 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Matthew Stafford",
+    "position": "QB",
+    "newOverallRank": 60,
+    "reason": "QB15. Proj 3900 pass yds/24 TD/10 INT. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "D'Andre Swift",
+    "position": "RB",
+    "newOverallRank": 61,
+    "reason": "RB23. Dual-Threat RB for CHI; proj 980 rush yds/6 TD with 45 rec. Medium competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Rashee Rice",
+    "position": "WR",
+    "newOverallRank": 62,
+    "reason": "WR24. Slot WR for KC; proj 75 rec/950 yds/7 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Justin Fields",
+    "position": "QB",
+    "newOverallRank": 63,
+    "reason": "QB16. Proj 3200 pass yds/19 TD/12 INT, 600 rush yds/5 rush TD. High competition; premium weekly ceiling."
+  },
+  {
+    "name": "RJ Harvey",
+    "position": "RB",
+    "newOverallRank": 64,
+    "reason": "RB24. Committee RB for DEN; proj 680 rush yds/5 TD with 30 rec. High competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Courtland Sutton",
+    "position": "WR",
+    "newOverallRank": 65,
+    "reason": "WR25. Perimeter WR for DEN; proj 76 rec/980 yds/8 TD. Medium competition; elite target share."
+  },
+  {
+    "name": "Baker Mayfield",
+    "position": "QB",
+    "newOverallRank": 66,
+    "reason": "QB17. Proj 4200 pass yds/28 TD/13 INT, 250 rush yds/2 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Omarion Hampton",
+    "position": "RB",
+    "newOverallRank": 67,
+    "reason": "RB25. Committee RB for LAC; proj 765 rush yds/6 TD with 20 rec. High competition; PPR pass-game keeps floor high."
+  },
+  {
+    "name": "Bo Nix",
+    "position": "QB",
+    "newOverallRank": 68,
+    "reason": "QB18. Proj 4000 pass yds/28 TD/11 INT, 450 rush yds/8 rush TD. Low competition; premium weekly ceiling."
+  },
+  {
+    "name": "Drake Maye",
+    "position": "QB",
+    "newOverallRank": 69,
+    "reason": "QB19. Proj 3650 pass yds/22 TD/12 INT, 360 rush yds/3 rush TD. Medium competition; premium weekly ceiling."
+  },
+  {
+    "name": "J.J. McCarthy",
+    "position": "QB",
+    "newOverallRank": 70,
+    "reason": "QB20. Proj 3100 pass yds/19 TD/12 INT, 320 rush yds/3 rush TD. Medium competition; premium weekly ceiling."
+  }
+]

@@ -74,6 +74,20 @@ const BODY_LIMIT_BYTES = bytesFromSizeString(BODY_LIMIT);
 // Mount streaming router FIRST before global middleware
 app.use('/api/llm/stream', streamRouter);
 
+// Mount route-scoped JSON parser for /api/draft BEFORE global parser
+app.use('/api/draft', express.json({ limit: process.env.BODY_LIMIT || '5mb' }));
+
+// Mount the draft router
+app.use('/api/draft', require('./routes/draft'));
+
+// Add route-scoped 413 JSON error handler for /api/draft
+app.use('/api/draft', (err, req, res, next) => {
+  if (err && (err.type === 'entity.too.large' || err.status === 413)) {
+    return res.status(413).json({ ok: false, message: 'Payload too large', limit: process.env.BODY_LIMIT || '5mb' });
+  }
+  return next(err);
+});
+
 // Apply compression middleware with conditional logic to skip streaming routes
 app.use(compression({
   filter: (req, res) => {
@@ -86,11 +100,16 @@ app.use(compression({
   }
 }));
 
+// Global parsers placed AFTER route-scoped parsers
 app.use(express.json({ limit: process.env.GLOBAL_BODY_LIMIT || '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: process.env.GLOBAL_BODY_LIMIT || '100kb' }));
 
 // Boot log to record effective limits and clarify order
-console.log('[BOOT]', { DIFY_DEBUG: process.env.DIFY_DEBUG, BODY_LIMIT: process.env.BODY_LIMIT || '5mb' });
+console.log('[BOOT]', {
+  DIFY_DEBUG: process.env.DIFY_DEBUG,
+  BODY_LIMIT: process.env.BODY_LIMIT || '5mb',
+  BLOCKING_TIMEOUT_MS: process.env.BLOCKING_TIMEOUT_MS || 3000000
+});
 
 // Dify API configuration
 const DIFY_API_URL = "https://api.dify.ai/v1/chat-messages";
@@ -405,15 +424,10 @@ const server = app.listen(PORT, () => {
   console.log(`Streaming enabled: ${process.env.STREAMING_ENABLED === 'true'}`);
 });
 
-// Configure server timeouts for long-running streaming requests
-// Honor LLM_REQUEST_TIMEOUT_MS environment variable with fallback to 240 seconds
-const timeoutMs = Number(process.env.LLM_REQUEST_TIMEOUT_MS || 240000);
-server.setTimeout(timeoutMs); // 240 seconds default
-server.headersTimeout = timeoutMs + 10000; // 250 seconds - 10 second buffer for headers
-server.keepAliveTimeout = Math.max(
-  server.headersTimeout || 0,
-  Number(process.env.SERVER_KEEPALIVE_TIMEOUT_MS || 300000)
-);
+// Configure server timeouts for blocking and streaming requests
+server.setTimeout(Number(process.env.BLOCKING_TIMEOUT_MS || 3000000));
+server.headersTimeout = Number(process.env.BLOCKING_TIMEOUT_MS || 3000000) + 100000;
+server.keepAliveTimeout = Number(process.env.SERVER_KEEPALIVE_TIMEOUT_MS || 3000000);
 
 /*
  * REVERSE PROXY CONFIGURATION NOTES:

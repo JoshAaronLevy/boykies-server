@@ -1,0 +1,17 @@
+[dotenv@17.2.1] injecting env (13) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[BOOT] { DIFY_DEBUG: undefined, BODY_LIMIT: '5mb' }
+Server running at http://localhost:3000
+Streaming enabled: true
+[STREAM] start {
+  action: 'initialize',
+  conversationId: null,
+  reqId: 'f07dc0e2-6a04-4e66-9322-0907552c3ef3',
+  t: 1756010713458
+}
+[STREAM] upstream-start { status: 200, reqId: 'f07dc0e2-6a04-4e66-9322-0907552c3ef3' }
+[STREAM] start {
+  action: 'initialize',
+  conversationId: null,
+  reqId: 'aa70899e-8a73-4ed3-8d87-96b1de7a355a',
+  t: 1756010721954
+}

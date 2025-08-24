@@ -1,52 +1,118 @@
 require("dotenv").config();
 const express = require("express");
+const compression = require("compression");
 const { neon } = require("@neondatabase/serverless");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 
+// Streaming utilities
+const {
+  setupSSEResponse,
+  sendSSEEvent,
+  sendSSEError,
+  sendSSEComplete,
+  setupHeartbeat,
+  setupAbortHandling,
+  setupTimeout
+} = require("./helpers/streaming");
+
+const {
+  sendToDifyBlocking,
+  sendToDifyStreaming,
+  validateStreamingRequest,
+  sendTestMessageBlocking
+} = require("./helpers/dify-client");
+
+// Import the route-scoped streaming router
+const { streamRouter } = require('./streamRouter');
+
 const sql = neon(process.env.DATABASE_URL);
 const app = express();
-app.use(express.json());
+
+// Configure body parser limits
+const BODY_LIMIT = process.env.BODY_LIMIT || '5mb';
+
+// Utility functions for payload size logging and error handling
+function bytesFromSizeString(limitString) {
+  const str = String(limitString).toLowerCase().trim();
+  const match = str.match(/^(\d+(?:\.\d+)?)\s*(b|kb|mb|gb)?$/);
+  if (!match) return 0;
+  
+  const num = parseFloat(match[1]);
+  const unit = match[2] || 'b';
+  
+  switch (unit) {
+    case 'b': return Math.floor(num);
+    case 'kb': return Math.floor(num * 1024);
+    case 'mb': return Math.floor(num * 1024 * 1024);
+    case 'gb': return Math.floor(num * 1024 * 1024 * 1024);
+    default: return 0;
+  }
+}
+
+function humanBytes(bytes) {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const size = parseFloat((bytes / Math.pow(k, i)).toFixed(1));
+  return `${size} ${sizes[i]}`;
+}
+
+function compactError(err, max = 600) {
+  const name = err?.name || 'Error';
+  const msg = (err?.message || String(err)).toString();
+  const stack = (err?.stack || '').split('\n')[1]?.trim() || '';
+  const base = `${name}: ${msg}`;
+  const trimmed = base.length > max ? (base.slice(0, max) + '… [truncated]') : base;
+  return stack ? `${trimmed} | ${stack}` : trimmed;
+}
+
+const BODY_LIMIT_BYTES = bytesFromSizeString(BODY_LIMIT);
+
+// Mount streaming router FIRST before global middleware
+app.use('/api/llm/stream', streamRouter);
+
+// Apply compression middleware with conditional logic to skip streaming routes
+app.use(compression({
+  filter: (req, res) => {
+    // Skip compression for streaming endpoints and if explicitly marked
+    if (req.path.startsWith('/api/llm/stream') || res.getHeader('X-No-Compression')) {
+      return false;
+    }
+    // Use compression's default filter for everything else
+    return compression.filter(req, res);
+  }
+}));
+
+app.use(express.json({ limit: process.env.GLOBAL_BODY_LIMIT || '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: process.env.GLOBAL_BODY_LIMIT || '100kb' }));
+
+// Boot log to record effective limits and clarify order
+console.log('[BOOT]', { DIFY_DEBUG: process.env.DIFY_DEBUG, BODY_LIMIT: process.env.BODY_LIMIT || '5mb' });
 
 // Dify API configuration
 const DIFY_API_URL = "https://api.dify.ai/v1/chat-messages";
 const DIFY_SECRET_KEY = process.env.DIFY_SECRET_KEY;
 const DIFY_APP_ID = process.env.DIFY_APP_ID;
 
-// Function to send message to Dify
+// Function to send message to Dify (legacy wrapper for backward compatibility)
 async function sendToDify(message, conversationId = null, isUserTurn = false) {
   try {
-    const payload = {
-      inputs: {},
-      query: message,
-      response_mode: "blocking",
-      conversation_id: conversationId,
-      user: "fantasy-draft-user"
-    };
-
-    const config = {
-      method: 'POST',
-      url: DIFY_API_URL,
-      headers: {
-        'Authorization': `Bearer ${DIFY_SECRET_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      data: payload,
-      timeout: isUserTurn ? 120000 : 30000 // 2 minutes for user turn, 30 seconds for other operations
-    };
-
-    const response = await axios(config);
-    return {
-      success: true,
-      data: response.data,
-      conversationId: response.data.conversation_id
-    };
+    // Use the new dify-client for blocking requests
+    // Create a simple action wrapper for legacy calls
+    const action = 'legacy'; // Special action type for direct message sending
+    const payload = { query: message, isUserTurn };
+    
+    const result = await sendToDifyBlocking(action, payload, conversationId);
+    return result;
   } catch (error) {
-    console.error('Dify API Error:', error.response?.data || error.message);
+    // console.error('Dify API Error:', error.message);
+    console.error('[error]', compactError(error));
     return {
       success: false,
-      error: error.response?.data || error.message
+      error: error.message
     };
   }
 }
@@ -128,6 +194,13 @@ app.post("/draft/reset", async (req, res) => {
   try {
     const { message = "Draft reset - starting over." } = req.body;
 
+    // Log payload size before sending to Dify
+    if (process.env.DIFY_DEBUG === '1') {
+      const sizeBytes = Buffer.byteLength(JSON.stringify(req.body || ""), "utf8");
+      const percent = Math.min(100, ((sizeBytes / BODY_LIMIT_BYTES) * 100)).toFixed(1);
+      console.log(`[payload] ~${humanBytes(sizeBytes)} (${sizeBytes} bytes) ≈ ${percent}% of limit ${humanBytes(BODY_LIMIT_BYTES)} (${BODY_LIMIT})`);
+    }
+
     // Send reset message without conversation ID to start fresh
     const result = await sendToDify(message);
     
@@ -159,12 +232,23 @@ app.post("/draft/initialize", async (req, res) => {
       });
     }
 
+    // Save the payload to initialDraftPayload.json in the root directory
+    const payloadFilePath = path.join(__dirname, "initialDraftPayload.json");
+    fs.writeFileSync(payloadFilePath, JSON.stringify(req.body, null, 2));
+
     const message = `Fantasy football draft is beginning. League details:
 - Number of teams: ${numTeams}
 - My draft position: ${userPickPosition}
 - Available players: ${JSON.stringify(players)}
 
 Please create an in-depth draft strategy for this league setup.`;
+
+    // Log payload size before sending to Dify
+    if (process.env.DIFY_DEBUG === '1') {
+      const sizeBytes = Buffer.byteLength(JSON.stringify(req.body || ""), "utf8");
+      const percent = Math.min(100, ((sizeBytes / BODY_LIMIT_BYTES) * 100)).toFixed(1);
+      console.log(`[payload] ~${humanBytes(sizeBytes)} (${sizeBytes} bytes) ≈ ${percent}% of limit ${humanBytes(BODY_LIMIT_BYTES)} (${BODY_LIMIT})`);
+    }
 
     const result = await sendToDify(message);
     
@@ -197,6 +281,13 @@ app.post("/draft/player-taken", async (req, res) => {
     }
 
     const message = `Player taken: ${JSON.stringify(player)} in round ${round}, pick ${pick}.`;
+
+    // Log payload size before sending to Dify
+    if (process.env.DIFY_DEBUG === '1') {
+      const sizeBytes = Buffer.byteLength(JSON.stringify(req.body || ""), "utf8");
+      const percent = Math.min(100, ((sizeBytes / BODY_LIMIT_BYTES) * 100)).toFixed(1);
+      console.log(`[payload] ~${humanBytes(sizeBytes)} (${sizeBytes} bytes) ≈ ${percent}% of limit ${humanBytes(BODY_LIMIT_BYTES)} (${BODY_LIMIT})`);
+    }
 
     const result = await sendToDify(message, conversationId);
     
@@ -237,6 +328,13 @@ Available players (top options): ${JSON.stringify(availablePlayers)}
 
 Please provide your analysis and recommendations for my next pick.`;
 
+    // Log payload size before sending to Dify
+    if (process.env.DIFY_DEBUG === '1') {
+      const sizeBytes = Buffer.byteLength(JSON.stringify(req.body || ""), "utf8");
+      const percent = Math.min(100, ((sizeBytes / BODY_LIMIT_BYTES) * 100)).toFixed(1);
+      console.log(`[payload] ~${humanBytes(sizeBytes)} (${sizeBytes} bytes) ≈ ${percent}% of limit ${humanBytes(BODY_LIMIT_BYTES)} (${BODY_LIMIT})`);
+    }
+
     const result = await sendToDify(message, conversationId, true); // true for isUserTurn (longer timeout)
     
     if (result.success) {
@@ -256,8 +354,86 @@ Please provide your analysis and recommendations for my next pick.`;
   }
 });
 
+// Test endpoint for Dify integration (non-streaming)
+app.post("/test-dify", async (req, res) => {
+  try {
+    const result = await sendTestMessageBlocking();
+    
+    if (result.success) {
+      res.json(result.data);
+    } else {
+      res.status(500).json({
+        error: result.error,
+        ...(process.env.NODE_ENV !== 'production' && { stack: result.stack })
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+      ...(process.env.NODE_ENV !== 'production' && { stack: error.stack })
+    });
+  }
+});
+
+// Streaming API Endpoints
+
+app.post('/debug/slow-stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+
+  const id = setInterval(() => res.write(`data: {"tick":${Date.now()}}\n\n`), 1000);
+  setTimeout(() => { clearInterval(id); res.write('event: done\ndata: {}\n\n'); res.end(); }, 8000);
+});
+
+// POST /api/llm/stream handler moved to streamRouter.js for better organization
+
+// GET /api/llm/stream - Optional EventSource fallback for cookie/session auth
+// Note: This is disabled by default and only for cookie/session contexts
+app.get('/api/llm/stream', (req, res) => {
+  res.status(405).json({
+    error: 'GET method not supported. Use POST with Authorization header.',
+    info: 'EventSource fallback is disabled. Use fetch with POST method instead.'
+  });
+});
+
 // Start the server
 const PORT = 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Streaming enabled: ${process.env.STREAMING_ENABLED === 'true'}`);
 });
+
+// Configure server timeouts for long-running streaming requests
+// Honor LLM_REQUEST_TIMEOUT_MS environment variable with fallback to 240 seconds
+const timeoutMs = Number(process.env.LLM_REQUEST_TIMEOUT_MS || 240000);
+server.setTimeout(timeoutMs); // 240 seconds default
+server.headersTimeout = timeoutMs + 10000; // 250 seconds - 10 second buffer for headers
+server.keepAliveTimeout = Math.max(
+  server.headersTimeout || 0,
+  Number(process.env.SERVER_KEEPALIVE_TIMEOUT_MS || 300000)
+);
+
+/*
+ * REVERSE PROXY CONFIGURATION NOTES:
+ *
+ * If using a reverse proxy (nginx, Apache, etc.) in front of this server,
+ * ensure the following configurations for streaming endpoints:
+ *
+ * For nginx:
+ *   location /api/llm/stream {
+ *     proxy_pass http://backend;
+ *     proxy_buffering off;
+ *     proxy_cache off;
+ *     proxy_read_timeout 300s;
+ *     proxy_send_timeout 300s;
+ *   }
+ *
+ * For Apache:
+ *   ProxyPass /api/llm/stream http://backend/api/llm/stream nocanon
+ *   ProxyPassReverse /api/llm/stream http://backend/api/llm/stream
+ *   # Add to virtual host:
+ *   SetEnv proxy-nokeepalive 1
+ *   SetEnv proxy-sendchunked 1
+ */

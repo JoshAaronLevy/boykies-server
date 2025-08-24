@@ -107,65 +107,180 @@ streamRouter.use((req, res, next) => {
   next();
 });
 
-// POST /api/llm/stream - Main streaming endpoint with correlation IDs and phase breadcrumbs
+// POST /api/llm/stream - Main streaming endpoint with hybrid action handling
 streamRouter.post('/', async (req, res) => {
   // Check if streaming is enabled
   if (process.env.STREAMING_ENABLED !== 'true') {
     return res.status(503).json({ error: 'Streaming is disabled' });
   }
 
+  // Parse and validate the request body
+  const { action, conversationId, payload } = req.body || {};
+  
+  if (!action || !payload) {
+    return res.status(400).json({
+      ok: false,
+      message: 'Missing required fields: action, payload'
+    });
+  }
+
+  // Hybrid action branching
+  const streamingActions = ['initialize', 'user-turn'];
+  const blockingActions = ['player-taken', 'user-drafted'];
+  
+  if (streamingActions.includes(action)) {
+    // Streaming path for initialize and user-turn
+    await handleStreamingAction(req, res, action, conversationId, payload);
+  } else if (blockingActions.includes(action)) {
+    // Blocking path for player-taken and user-drafted
+    await handleBlockingAction(req, res, action, conversationId, payload);
+  } else {
+    return res.status(400).json({
+      ok: false,
+      message: `Unknown action: ${action}. Supported actions: ${[...streamingActions, ...blockingActions].join(', ')}`
+    });
+  }
+});
+
+// Helper function to trim and shape inputs for streaming actions
+function shapeInputsForStreaming(action, payload) {
+  const PLAYER_ALLOWED_FIELDS = (process.env.PLAYER_ALLOWED_FIELDS || 'id,name,position,team,byeWeek,adp').split(',');
+  const MAX_INIT_PLAYERS = Number(process.env.MAX_INIT_PLAYERS || 25);
+  const MAX_STRING_LEN = Number(process.env.MAX_STRING_LEN || 200);
+
+  if (action === 'initialize') {
+    const { numTeams, userPickPosition, players } = payload;
+    
+    // Trim and whitelist players
+    const trimmedPlayers = (players || []).slice(0, MAX_INIT_PLAYERS).map(player => {
+      const trimmed = {};
+      for (const field of PLAYER_ALLOWED_FIELDS) {
+        if (player && Object.prototype.hasOwnProperty.call(player, field)) {
+          let value = player[field];
+          if (typeof value === 'string' && value.length > MAX_STRING_LEN) {
+            value = value.slice(0, MAX_STRING_LEN);
+          }
+          trimmed[field] = value;
+        }
+      }
+      return trimmed;
+    });
+
+    return {
+      numTeams,
+      userPickPosition,
+      players: trimmedPlayers
+    };
+  } else if (action === 'user-turn') {
+    const { player, round, pick, userRoster, availablePlayers } = payload;
+    
+    // Trim available players to reasonable size
+    const trimmedAvailablePlayers = (availablePlayers || []).slice(0, MAX_INIT_PLAYERS).map(player => {
+      const trimmed = {};
+      for (const field of PLAYER_ALLOWED_FIELDS) {
+        if (player && Object.prototype.hasOwnProperty.call(player, field)) {
+          let value = player[field];
+          if (typeof value === 'string' && value.length > MAX_STRING_LEN) {
+            value = value.slice(0, MAX_STRING_LEN);
+          }
+          trimmed[field] = value;
+        }
+      }
+      return trimmed;
+    });
+
+    return {
+      player,
+      round,
+      pick,
+      userRoster,
+      availablePlayers: trimmedAvailablePlayers
+    };
+  }
+  
+  return payload;
+}
+
+// Streaming action handler using proven SSE pattern
+async function handleStreamingAction(req, res, action, conversationId, payload) {
+  // Import the new helper functions
+  const { getDifyStreamingResponse } = require('./helpers/dify-client');
+  
   // Generate correlation ID and create phase helper
   const reqId = generateReqId();
   const phase = makePhase(res, reqId);
   
-  // Add route entry logging with correlation ID
-  const { action, conversationId } = req.body || {};
   console.log('[STREAM] start', { action, conversationId, reqId, t: Date.now() });
   
   // Phase: route_enter
   phase('route_enter', { action, conversationId });
 
   // Setup SSE response headers
-  setupSSEResponse(res);
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
 
   // Immediate flush + ack to prevent 504 timeouts
-  res.write(': keep-alive\n\n'); // immediate flush
+  res.write(': keep-alive\n\n');
   
   // Phase: ack_sent
   phase('ack_sent');
 
   // Get configuration
   const heartbeatMs = Number(process.env.STREAM_HEARTBEAT_MS || 20000);
-  const timeoutMs = Number(process.env.LLM_REQUEST_TIMEOUT_MS || 240000);
   
-  // Setup abort controller and timeout
-  const controller = new AbortController();
-  const clearTimeout = setupTimeout(controller, timeoutMs);
-  
-  // Setup heartbeat - capture timer ID for proper cleanup
-  const heartbeatTimer = setupHeartbeat(res, heartbeatMs);
+  // Setup heartbeat timer
+  const heartbeatTimer = setInterval(() => {
+    if (!res.writableEnded) {
+      res.write(': keep-alive\n\n');
+    }
+  }, heartbeatMs);
   
   // Centralized cleanup function
   const cleanupAndEnd = () => {
     clearInterval(heartbeatTimer);
-    clearTimeout();
-    console.log('[stream] heartbeat cleared');
     if (!res.writableEnded) {
       res.end();
     }
   };
   
   // Setup abort handling for client disconnect
-  setupAbortHandling(req, controller, cleanupAndEnd);
+  req.on('close', () => {
+    cleanupAndEnd();
+  });
 
   try {
-    // Validate request
-    const { action, conversationId, payload } = validateStreamingRequest(req.body);
+    // Validate and shape inputs
+    if (action === 'initialize') {
+      const { numTeams, userPickPosition, players } = payload;
+      if (!numTeams || !userPickPosition || !players) {
+        phase('validation_error');
+        res.write(`event: error\ndata: ${JSON.stringify({
+          message: 'Initialize action requires: numTeams, userPickPosition, players'
+        })}\n\n`);
+        cleanupAndEnd();
+        return;
+      }
+    } else if (action === 'user-turn') {
+      const { player, round, pick, userRoster, availablePlayers } = payload;
+      if (!player || !round || !pick || !userRoster || !availablePlayers) {
+        phase('validation_error');
+        res.write(`event: error\ndata: ${JSON.stringify({
+          message: 'User-turn action requires: player, round, pick, userRoster, availablePlayers'
+        })}\n\n`);
+        cleanupAndEnd();
+        return;
+      }
+    }
     
     // Phase: validated_ok
     phase('validated_ok');
     
-    // Log payload size before sending to Dify
+    // Shape inputs for the action
+    const shapedInputs = shapeInputsForStreaming(action, payload);
+    
+    // Log payload size if debug enabled
     if (process.env.DIFY_DEBUG === '1') {
       const sizeBytes = Buffer.byteLength(JSON.stringify(req.body || ""), "utf8");
       const percent = Math.min(100, ((sizeBytes / BODY_LIMIT_BYTES) * 100)).toFixed(1);
@@ -175,20 +290,195 @@ streamRouter.post('/', async (req, res) => {
     // Phase: calling_upstream
     phase('calling_upstream');
     
-    // Stream response from Dify with instrumented streaming function
-    await sendToDifyStreamingInstrumented(req, res, cleanupAndEnd, reqId, phase, action, payload, "fantasy-draft-user", conversationId);
+    // Connect watchdog setup
+    const connectMs = Number(process.env.LLM_CONNECT_WATCHDOG_MS || 15000);
+    let watchdogTimeout;
+    let upstream, controller;
+    
+    try {
+      // Set up watchdog that fires if fetch hasn't returned
+      watchdogTimeout = setTimeout(() => {
+        res.write(`event: error\ndata: ${JSON.stringify({ message: `Upstream connect timeout after ${connectMs}ms` })}\n\n`);
+        cleanupAndEnd();
+      }, connectMs);
+      
+      // Build query and inputs
+      let query, inputs;
+      if (action === 'initialize') {
+        query = 'Initialize draft strategy given these inputs.';
+        inputs = shapedInputs;
+      } else if (action === 'user-turn') {
+        query = `Player taken: ${JSON.stringify(shapedInputs.player)} in round ${shapedInputs.round}, pick ${shapedInputs.pick}.
+
+IT'S MY TURN NOW!
+
+My current roster: ${JSON.stringify(shapedInputs.userRoster)}
+Available players (top options): ${JSON.stringify(shapedInputs.availablePlayers)}
+
+Please provide your analysis and recommendations for my next pick.`;
+        inputs = {};
+      }
+      
+      // Call the new streaming helper
+      const result = await getDifyStreamingResponse({
+        action,
+        query,
+        inputs,
+        user: "fantasy-draft-user",
+        conversationId
+      });
+      
+      upstream = result.response;
+      controller = result.controller;
+      
+    } finally {
+      if (watchdogTimeout) {
+        clearTimeout(watchdogTimeout);
+      }
+    }
+
+    console.log('[STREAM] upstream-start', { status: upstream.status, reqId });
+    
+    // Phase: upstream_response
+    phase('upstream_response', { status: upstream.status, ct: upstream.headers.get('content-type') });
+
+    // Handle upstream errors
+    if (!upstream.body) {
+      phase('upstream_no_body');
+      res.write(`event: error\ndata: ${JSON.stringify({ message: 'Upstream had no body', status: upstream.status })}\n\n`);
+      cleanupAndEnd();
+      return;
+    }
+    
+    if (!upstream.ok) {
+      let bodySnippet = '';
+      try {
+        const errText = await upstream.text();
+        bodySnippet = errText.slice(0, 300);
+      } catch {}
+      
+      phase('upstream_non_200', { status: upstream.status });
+      res.write(`event: error\ndata: ${JSON.stringify({
+        message: `Upstream ${upstream.status} ${upstream.statusText}`,
+        status: upstream.status,
+        bodySnippet
+      })}\n\n`);
+      cleanupAndEnd();
+      return;
+    }
+
+    const reader = upstream.body.getReader();
+    const decoder = new TextDecoder();
+    let isFirstChunk = true;
+    
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      
+      // On first chunk, decode a sample for phase logging
+      if (isFirstChunk && value) {
+        let sample = '';
+        try {
+          const decoded = decoder.decode(value.slice(0, Math.min(400, value.length)), { stream: true });
+          sample = decoded.slice(0, 300);
+        } catch (err) {
+          sample = `<decode error: ${err.message}>`;
+        }
+        if (process.env.DIFY_DEBUG === '1') {
+          phase('upstream_first_chunk_sample', { sample });
+        }
+        isFirstChunk = false;
+      }
+      
+      // Write original chunk unchanged (binary-safe passthrough)
+      res.write(value);
+    }
+
+    // Phase: upstream_end
+    phase('upstream_end');
+    res.write('event: done\ndata: {}\n\n');
+    console.log('[STREAM] upstream-end', { reqId });
+
+  } catch (err) {
+    console.log('[STREAM] upstream-error', { error: String(err), reqId });
+    phase('upstream_fetch_error', { message: String(err) });
+    if (!res.writableEnded) {
+      res.write(`event: error\ndata: ${JSON.stringify({ message: String(err), retryable: false })}\n\n`);
+    }
+  } finally {
+    phase('stream_ending');
+    cleanupAndEnd();
+  }
+}
+
+// Blocking action handler for quick JSON responses
+async function handleBlockingAction(req, res, action, conversationId, payload) {
+  // Import the new helper functions
+  const { getDifyBlockingResponse } = require('./helpers/dify-client');
+  
+  try {
+    // Validate required fields
+    if (action === 'player-taken') {
+      const { player, round, pick } = payload;
+      if (!player || !round || !pick) {
+        return res.status(400).json({
+          ok: false,
+          message: 'Player-taken action requires: player, round, pick'
+        });
+      }
+    } else if (action === 'user-drafted') {
+      const { player, round, pick } = payload;
+      if (!player || !round || !pick) {
+        return res.status(400).json({
+          ok: false,
+          message: 'User-drafted action requires: player, round, pick'
+        });
+      }
+    }
+    
+    // Build query for the action
+    let query;
+    if (action === 'player-taken') {
+      const { player, round, pick } = payload;
+      query = `Player taken: ${JSON.stringify(player)} in round ${round}, pick ${pick}.`;
+    } else if (action === 'user-drafted') {
+      const { player, round, pick } = payload;
+      query = `I drafted: ${JSON.stringify(player)} in round ${round}, pick ${pick}.`;
+    }
+    
+    // Call the blocking helper with 10-15s timeout
+    const result = await getDifyBlockingResponse({
+      action,
+      query,
+      inputs: {},
+      user: "fantasy-draft-user",
+      conversationId,
+      timeoutMs: 15000
+    });
+    
+    if (result.ok) {
+      res.status(200).json({
+        ok: true,
+        confirmation: result.data?.answer || 'Acknowledged',
+        conversationId: result.conversationId
+      });
+    } else {
+      res.status(result.status || 500).json({
+        ok: false,
+        message: result.message
+      });
+    }
     
   } catch (error) {
     console.error('[error]', compactError(error));
-    phase('stream_ending', { error: error.message });
-    if (!res.writableEnded) {
-      sendSSEError(res, error, false);
-      res.end();
-    }
+    res.status(500).json({
+      ok: false,
+      message: error.message
+    });
   }
-});
+}
 
-// Instrumented version of sendToDifyStreaming with phase breadcrumbs
+// Instrumented version of sendToDifyStreaming with phase breadcrumbs (legacy - keep for compatibility)
 async function sendToDifyStreamingInstrumented(req, res, cleanupAndEnd, reqId, phase, action, payload, user, conversationId = null) {
   // Setup connect watchdog
   const connectMs = Number(process.env.LLM_CONNECT_WATCHDOG_MS || 15000);

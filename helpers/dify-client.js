@@ -496,6 +496,206 @@ async function sendTestMessageStreaming(req, res, cleanupAndEnd) {
  * @param {string|null} params.conversationId - Conversation ID
  * @returns {Promise<{response: Response, controller: AbortController}>}
  */
+// ROO: candidate location for SSE buffer-to-JSON pattern
+
+/**
+ * Server-side streaming buffer helper that consumes SSE from Dify and returns single JSON response
+ * @param {string} action - Action type for timeout calculation
+ * @param {Object} payload - Request payload
+ * @param {string|null} conversationId - Conversation ID for context
+ * @param {number} timeoutMs - Timeout in milliseconds (default 295s)
+ * @returns {Promise<Object>} - Single JSON response with accumulated text
+ */
+async function getDifyBufferedResponse(action, payload, conversationId = null, timeoutMs = 295000) {
+  const { TextDecoder } = require('util');
+  const startTime = Date.now();
+  
+  console.log('[BUFFER] Starting getDifyBufferedResponse', { action, conversationId, timeoutMs });
+  
+  try {
+    const message = buildDifyMessage(action, payload);
+    console.log('[BUFFER] Built message for action:', action, 'Message length:', message.length);
+    
+    // Build request payload
+    const requestPayload = {
+      inputs: {},
+      query: message,
+      response_mode: "streaming",
+      conversation_id: conversationId,
+      user: "fantasy-draft-user"
+    };
+
+    console.log('[BUFFER] Request payload:', JSON.stringify(requestPayload, null, 2));
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+    console.log('[BUFFER] Making fetch request to:', process.env.DIFY_API_URL);
+    const response = await fetch(process.env.DIFY_API_URL || 'https://api.dify.ai/v1/chat-messages', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.DIFY_SECRET_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestPayload),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+    console.log('[BUFFER] Fetch response status:', response.status, 'ok:', response.ok);
+
+    if (!response.ok) {
+      throw new Error(`Dify API error: ${response.status} ${response.statusText}`);
+    }
+
+    if (!response.body) {
+      throw new Error('No response body from Dify API');
+    }
+
+    // Consume SSE stream and accumulate final text
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let finalAnswer = '';
+    let finalConversationId = conversationId;
+    let messageId = null;
+    let chunkCount = 0;
+    let eventCounts = {};
+
+    console.log('[BUFFER] Starting SSE stream processing');
+
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          console.log('[BUFFER] Stream reading completed, total chunks:', chunkCount);
+          break;
+        }
+        
+        chunkCount++;
+        const chunk = decoder.decode(value, { stream: true });
+        buffer += chunk;
+        
+        // Process complete SSE messages
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // Keep incomplete line in buffer
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              
+              // Count event types
+              eventCounts[data.event] = (eventCounts[data.event] || 0) + 1;
+              
+              console.log('[BUFFER] SSE Event:', data.event, 'Data keys:', Object.keys(data));
+              
+              // Handle different event types
+              if (data.event === 'message') {
+                const chunk = data.answer || '';
+                console.log('[BUFFER] Message event - answer chunk:', chunk ? `${chunk.length} chars: "${chunk.slice(0, 50)}..."` : 'null/undefined');
+                console.log('[BUFFER] Message event - conversation_id:', data.conversation_id);
+                console.log('[BUFFER] Message event - id:', data.id);
+                
+                // ACCUMULATE chunks instead of overwriting
+                if (chunk) {
+                  finalAnswer += chunk;
+                  console.log('[BUFFER] Accumulated answer length:', finalAnswer.length);
+                }
+                
+                finalConversationId = data.conversation_id || finalConversationId;
+                messageId = data.id || messageId;
+              } else if (data.event === 'agent_message') {
+                const chunk = data.answer || '';
+                console.log('[BUFFER] Agent message event - answer chunk:', chunk ? `${chunk.length} chars: "${chunk.slice(0, 50)}..."` : 'null/undefined');
+                // ACCUMULATE chunks instead of overwriting
+                if (chunk) {
+                  finalAnswer += chunk;
+                  console.log('[BUFFER] Accumulated answer length:', finalAnswer.length);
+                }
+              } else if (data.event === 'agent_thought') {
+                console.log('[BUFFER] Agent thought event - thought:', data.thought ? `${data.thought.length} chars` : 'null/undefined');
+                // Some Dify implementations put the answer in agent_thought events
+                if (data.thought && !finalAnswer) {
+                  finalAnswer = data.thought;
+                }
+              } else if (data.event === 'message_file') {
+                console.log('[BUFFER] Message file event');
+                // Handle file events if needed
+              } else if (data.event === 'message_end') {
+                console.log('[BUFFER] Message end event - final answer length:', finalAnswer.length);
+                // Stream completed successfully
+                break;
+              } else if (data.event === 'error') {
+                console.log('[BUFFER] Error event:', data.message);
+                throw new Error(`Dify stream error: ${data.message || 'Unknown error'}`);
+              } else {
+                console.log('[BUFFER] Unknown event type:', data.event, 'Full data:', JSON.stringify(data));
+              }
+            } catch (parseError) {
+              // Skip malformed JSON lines
+              console.warn('[BUFFER] Failed to parse SSE line:', line.slice(0, 100), 'Error:', parseError.message);
+            }
+          } else if (line.trim()) {
+            console.log('[BUFFER] Non-data SSE line:', line.slice(0, 100));
+          }
+        }
+      }
+    } catch (streamError) {
+      console.log('[BUFFER] Stream reading error:', streamError.message);
+      // Handle stream reading errors
+      if (streamError.name === 'AbortError') {
+        throw new Error('Stream timeout after ' + timeoutMs + 'ms');
+      }
+      throw streamError;
+    }
+
+    console.log('[BUFFER] Event counts:', eventCounts);
+    console.log('[BUFFER] Final answer length:', finalAnswer.length);
+    console.log('[BUFFER] Final answer preview:', finalAnswer.slice(0, 200));
+
+    // Strip <think>...</think> tags from final answer
+    if (finalAnswer) {
+      finalAnswer = finalAnswer.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+      console.log('[BUFFER] After stripping think tags, length:', finalAnswer.length);
+    }
+
+    const duration = Date.now() - startTime;
+    console.log('[BUFFER] Total duration:', duration, 'ms');
+
+    return {
+      success: true,
+      data: {
+        answer: finalAnswer,
+        conversation_id: finalConversationId,
+        id: messageId,
+        event: 'message'
+      },
+      conversationId: finalConversationId,
+      duration: duration
+    };
+
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    console.error('[BUFFER] Error:', compactError(error));
+    
+    // Determine appropriate error type
+    let errorType = 'stream_error';
+    if (error.name === 'AbortError' || error.message.includes('timeout')) {
+      errorType = 'timeout';
+    } else if (error.message.includes('buffer overflow')) {
+      errorType = 'buffer_overflow';
+    }
+    
+    return {
+      success: false,
+      error: error.message,
+      errorType: errorType,
+      duration: duration
+    };
+  }
+}
+
 async function getDifyStreamingResponse({ action, query, inputs, user, conversationId }) {
   const controller = new AbortController();
   
@@ -511,7 +711,7 @@ async function getDifyStreamingResponse({ action, query, inputs, user, conversat
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${process.env.DIFY_SECRET_KEY}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json' // ROO: missing Accept: text/event-stream for streaming calls
     },
     body: JSON.stringify(payload),
     signal: controller.signal
@@ -595,5 +795,6 @@ module.exports = {
   sendTestMessageBlocking,
   sendTestMessageStreaming,
   getDifyStreamingResponse,
-  getDifyBlockingResponse
+  getDifyBlockingResponse,
+  getDifyBufferedResponse
 };

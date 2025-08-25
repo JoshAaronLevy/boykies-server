@@ -147,7 +147,7 @@ app.get("/version", async (req, res) => {
 });
 
 // Endpoint to insert a player
-app.post("/players", async (req, res) => {
+app.post("/api/players", async (req, res) => {
   // Destructure the request body to individual variables
   const {
     id,
@@ -195,9 +195,9 @@ app.post("/players", async (req, res) => {
 });
 
 // Endpoint to serve players from finalized draft roster JSON file
-app.get("/players", async (req, res) => {
+app.get("/api/players", async (req, res) => {
   try {
-    const filePath = path.join(__dirname, "data", "finalized", "draftRoster_v3.json");
+    const filePath = path.join(__dirname, "data", "finalized", "draftRoster_v4.json");
     const jsonData = fs.readFileSync(filePath, "utf8");
     const players = JSON.parse(jsonData);
     res.json(players);
@@ -209,7 +209,8 @@ app.get("/players", async (req, res) => {
 // Fantasy Football Draft Endpoints
 
 // Endpoint to reset the draft
-app.post("/draft/reset", async (req, res) => {
+// ROO: duplicate route
+app.post("/api/draft/reset", async (req, res) => {
   try {
     const { message = "Draft reset - starting over." } = req.body;
 
@@ -240,56 +241,10 @@ app.post("/draft/reset", async (req, res) => {
   }
 });
 
-// Endpoint to initialize draft strategy
-app.post("/draft/initialize", async (req, res) => {
-  try {
-    const { numTeams, userPickPosition, players } = req.body;
-    
-    if (!numTeams || !userPickPosition || !players) {
-      return res.status(400).json({
-        error: "Missing required fields: numTeams, userPickPosition, players"
-      });
-    }
-
-    // Save the payload to initialDraftPayload.json in the root directory
-    const payloadFilePath = path.join(__dirname, "initialDraftPayload.json");
-    fs.writeFileSync(payloadFilePath, JSON.stringify(req.body, null, 2));
-
-    const message = `Fantasy football draft is beginning. League details:
-- Number of teams: ${numTeams}
-- My draft position: ${userPickPosition}
-- Available players: ${JSON.stringify(players)}
-
-Please create an in-depth draft strategy for this league setup.`;
-
-    // Log payload size before sending to Dify
-    if (process.env.DIFY_DEBUG === '1') {
-      const sizeBytes = Buffer.byteLength(JSON.stringify(req.body || ""), "utf8");
-      const percent = Math.min(100, ((sizeBytes / BODY_LIMIT_BYTES) * 100)).toFixed(1);
-      console.log(`[payload] ~${humanBytes(sizeBytes)} (${sizeBytes} bytes) ≈ ${percent}% of limit ${humanBytes(BODY_LIMIT_BYTES)} (${BODY_LIMIT})`);
-    }
-
-    const result = await sendToDify(message);
-    
-    if (result.success) {
-      res.json({
-        success: true,
-        strategy: result.data.answer,
-        conversationId: result.conversationId
-      });
-    } else {
-      res.status(500).json({
-        success: false,
-        error: result.error
-      });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+// Duplicate route removed - using the buffered version in routes/draft.js instead
 
 // Endpoint to mark a player as taken
-app.post("/draft/player-taken", async (req, res) => {
+app.post("/api/draft/player-taken", async (req, res) => {
   try {
     const { player, round, pick, conversationId } = req.body;
     
@@ -328,7 +283,8 @@ app.post("/draft/player-taken", async (req, res) => {
 });
 
 // Endpoint for when it's the user's turn
-app.post("/draft/user-turn", async (req, res) => {
+// ROO: hardcoded blocking for initialize/user-turn
+app.post("/api/draft/user-turn", async (req, res) => {
   try {
     const { player, round, pick, userRoster, availablePlayers, conversationId } = req.body;
     

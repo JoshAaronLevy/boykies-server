@@ -1,0 +1,12 @@
+{
+  "user": "dev-josh",
+  "conversationId": "safe-test-123",
+  "payload": {
+    "round": 1,
+    "pick": 5,
+    "userRoster": [],
+    "availablePlayers": [],
+    "leagueSize": 12,
+    "pickSlot": 5
+  }
+}

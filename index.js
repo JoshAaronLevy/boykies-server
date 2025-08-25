@@ -21,7 +21,8 @@ const {
   sendToDifyBlocking,
   sendToDifyStreaming,
   validateStreamingRequest,
-  sendTestMessageBlocking
+  sendTestMessageBlocking,
+  getDifyBlockingResponse
 } = require("./helpers/dify-client");
 
 // Import the route-scoped streaming router
@@ -243,89 +244,167 @@ app.post("/api/draft/reset", async (req, res) => {
 
 // Duplicate route removed - using the buffered version in routes/draft.js instead
 
-// Endpoint to mark a player as taken
+// ROO: ACK endpoint — blocking, 15s
 app.post("/api/draft/player-taken", async (req, res) => {
   try {
     const { player, round, pick, conversationId } = req.body;
     
-    if (!player || !round || !pick || !conversationId) {
+    if (!player || !round || !pick) {
       return res.status(400).json({
-        error: "Missing required fields: player, round, pick, conversationId"
+        error: "Missing required fields: player, round, pick"
       });
     }
 
-    const message = `Player taken: ${JSON.stringify(player)} in round ${round}, pick ${pick}.`;
-
-    // Log payload size before sending to Dify
-    if (process.env.DIFY_DEBUG === '1') {
-      const sizeBytes = Buffer.byteLength(JSON.stringify(req.body || ""), "utf8");
-      const percent = Math.min(100, ((sizeBytes / BODY_LIMIT_BYTES) * 100)).toFixed(1);
-      console.log(`[payload] ~${humanBytes(sizeBytes)} (${sizeBytes} bytes) ≈ ${percent}% of limit ${humanBytes(BODY_LIMIT_BYTES)} (${BODY_LIMIT})`);
-    }
-
-    const result = await sendToDify(message, conversationId);
+    // Set response timeout ≥ 20,000 ms
+    res.setTimeout(20000);
     
-    if (result.success) {
+    // Add route timeout header
+    res.setHeader('X-Route-Timeout', '15000');
+
+    // Create small, explicit payload structure
+    const user = "fantasy-draft-user";
+    const query = `Player taken: ${player.name} (${player.position}, ${player.team?.abbr || ''})`;
+    const inputs = {
+      action: 'player-taken',
+      player: {
+        id: player.id,
+        name: player.name,
+        position: player.position,
+        team: { abbr: player.team?.abbr },
+        byeWeek: player.byeWeek
+      }
+    };
+
+    console.log(`[player-taken] ${player.name} (${player.position}) - round ${round}, pick ${pick}`);
+
+    // Use blocking call with 15,000ms timeout
+    const result = await getDifyBlockingResponse({
+      action: 'player-taken',
+      query,
+      inputs,
+      user,
+      conversationId,
+      timeoutMs: 15000
+    });
+    
+    if (result.ok) {
+      // Pass-through upstream answer (trimmed & think-stripped)
+      let answer = result.data?.answer || '';
+      if (answer) {
+        // Remove common think patterns
+        answer = answer.replace(/\*\*Think:.*?\*\*/gs, '').trim();
+        answer = answer.replace(/\[Think:.*?\]/gs, '').trim();
+      }
+      
       res.json({
         success: true,
-        confirmation: result.data.answer,
+        confirmation: answer || 'Player taken acknowledged',
         conversationId: result.conversationId
       });
     } else {
-      res.status(500).json({
-        success: false,
-        error: result.error
-      });
+      // Error mapping per requirements
+      if (result.status === 408 || result.status === 504) {
+        // AbortError or upstream 504 → return 504 with timeout error
+        res.status(504).json({ ok: false, error: 'timeout' });
+      } else {
+        // Others → 502 with upstream error
+        res.status(502).json({ ok: false, error: 'upstream' });
+      }
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('[player-taken] error:', error.message);
+    res.status(502).json({ ok: false, error: 'upstream' });
   }
 });
 
-// Endpoint for when it's the user's turn
-// ROO: hardcoded blocking for initialize/user-turn
+// ROO: User-turn — streaming-buffer, 90s
 app.post("/api/draft/user-turn", async (req, res) => {
+  const startTime = Date.now();
+  
+  // Set response timeout ≥ 95,000–120,000 ms
+  res.setTimeout(105000);
+  
   try {
-    const { player, round, pick, userRoster, availablePlayers, conversationId } = req.body;
+    const { round, pick, userRoster, availablePlayers, conversationId, teamNum, pickSlot } = req.body;
     
-    if (!player || !round || !pick || !userRoster || !availablePlayers || !conversationId) {
+    // Validation
+    if (!round || !pick || !userRoster || !availablePlayers) {
       return res.status(400).json({
-        error: "Missing required fields: player, round, pick, userRoster, availablePlayers, conversationId"
+        ok: false,
+        error: "Missing required fields: round, pick, userRoster, availablePlayers"
       });
     }
 
-    const message = `Player taken: ${JSON.stringify(player)} in round ${round}, pick ${pick}.
+    // Import payload monitoring
+    const { monitorPayloadSize } = require('./helpers/payload-monitor');
+    
+    // Create minimal payload structure for LLM
+    const payload = {
+      query: "User's turn",
+      inputs: {
+        round,
+        pick,
+        roster: userRoster,
+        availablePlayers: availablePlayers.slice(0, 25), // Limit to 15-25 slim players
+        teamNum,
+        pickSlot,
+        action: 'users-turn'
+      },
+      conversationId
+    };
 
-IT'S MY TURN NOW!
+    // Monitor payload size
+    monitorPayloadSize(payload, 'user-turn endpoint');
 
-My current roster: ${JSON.stringify(userRoster)}
-Available players (top options): ${JSON.stringify(availablePlayers)}
+    console.log(`[user-turn] round ${round}, pick ${pick} - roster size: ${userRoster?.length}, available: ${availablePlayers?.length}`);
 
-Please provide your analysis and recommendations for my next pick.`;
+    // Use streaming buffer approach with 90s timeout
+    const { getDifyBufferedResponse } = require('./helpers/dify-client');
+    const result = await getDifyBufferedResponse('user-turn', payload, conversationId, 90000);
+    
+    const duration = Date.now() - startTime;
+    console.log(`[user-turn] streaming-buffer ms=${duration}`);
 
-    // Log payload size before sending to Dify
-    if (process.env.DIFY_DEBUG === '1') {
-      const sizeBytes = Buffer.byteLength(JSON.stringify(req.body || ""), "utf8");
-      const percent = Math.min(100, ((sizeBytes / BODY_LIMIT_BYTES) * 100)).toFixed(1);
-      console.log(`[payload] ~${humanBytes(sizeBytes)} (${sizeBytes} bytes) ≈ ${percent}% of limit ${humanBytes(BODY_LIMIT_BYTES)} (${BODY_LIMIT})`);
+    // Add headers
+    res.set('X-Backend-Timing', duration.toString());
+    res.set('X-Streamed', 'true');
+    if (result.conversationId) {
+      res.set('X-Conversation-Id', result.conversationId);
     }
 
-    const result = await sendToDify(message, conversationId, true); // true for isUserTurn (longer timeout)
-    
     if (result.success) {
-      res.json({
-        success: true,
-        analysis: result.data.answer,
-        conversationId: result.conversationId
+      return res.json({
+        ok: true,
+        conversationId: result.conversationId,
+        answer: result.data?.answer,
+        usage: result.data?.usage,
+        duration_ms: duration
       });
     } else {
-      res.status(500).json({
-        success: false,
-        error: result.error
-      });
+      // Error mapping consistent with initialize endpoint
+      if (result.errorType === 'timeout') {
+        // AbortError/timeout → 504 with appropriate message
+        return res.status(504).json({
+          ok: false,
+          error: 'timeout'
+        });
+      } else {
+        // Other errors → 502 with appropriate message
+        return res.status(502).json({
+          ok: false,
+          error: 'upstream'
+        });
+      }
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    const duration = Date.now() - startTime;
+    console.error('[user-turn] error:', error.message);
+    console.log(`[user-turn] error ms=${duration}`);
+    
+    return res.status(502).json({
+      ok: false,
+      error: 'upstream'
+    });
   }
 });
 

@@ -244,8 +244,223 @@ app.post("/api/draft/reset", async (req, res) => {
 
 // Duplicate route removed - using the buffered version in routes/draft.js instead
 
-// ROO: ACK endpoint — blocking, 15s
+// ROO: ACK endpoint — blocking, fast lightweight ACK
 app.post("/api/draft/player-taken", async (req, res) => {
+  const crypto = require('crypto');
+  const { UnifiedDifyClient, TraceLogger } = require('./helpers/dify-client');
+  
+  const traceId = crypto.randomUUID();
+  const logger = new TraceLogger(traceId);
+  const t0 = Date.now();
+  
+  logger.breadcrumb('player_taken_start', {
+    endpoint: '/api/draft/player-taken',
+    requestBody: Object.keys(req.body || {})
+  });
+  
+  try {
+    const { conversationId, player } = req.body;
+    
+    // Enhanced validation with detailed error messages
+    if (!conversationId || !player) {
+      logger.breadcrumb('player_taken_validation_failed', {
+        hasConversationId: !!conversationId,
+        hasPlayer: !!player
+      });
+      return res.status(400).json({
+        ok: false,
+        error: 'validation_error',
+        message: "Missing required fields: conversationId, player",
+        details: {
+          conversationId: conversationId ? 'present' : 'missing',
+          player: player ? 'present' : 'missing'
+        },
+        traceId,
+        source: 'node_backend_validation',
+        duration_ms: Date.now() - t0
+      });
+    }
+    
+    if (!player.id || !player.name) {
+      logger.breadcrumb('player_taken_player_validation_failed', {
+        hasId: !!player.id,
+        hasName: !!player.name,
+        playerKeys: Object.keys(player || {})
+      });
+      return res.status(400).json({
+        ok: false,
+        error: 'validation_error',
+        message: "Missing required player fields: id, name",
+        details: {
+          playerId: player.id ? 'present' : 'missing',
+          playerName: player.name ? 'present' : 'missing',
+          providedFields: Object.keys(player || {})
+        },
+        traceId,
+        source: 'node_backend_validation',
+        duration_ms: Date.now() - t0
+      });
+    }
+
+    logger.breadcrumb('player_taken_validated', {
+      playerId: player.id,
+      playerName: player.name,
+      conversationId: conversationId?.slice(0, 8) + '...'
+    });
+
+    // Fix timeout configuration: 45s response, 15s Dify
+    res.setTimeout(45000);
+
+    const unifiedClient = new UnifiedDifyClient();
+    
+    // Create request body for Dify
+    const difyRequestBody = {
+      query: `Taken: ${player.name} (id:${player.id})`,
+      inputs: {
+        action: 'player-taken',
+        player: {
+          id: player.id,
+          name: player.name,
+          position: player.position,
+          team: player.team?.abbr || player.team
+        }
+      },
+      user: req.body.user || 'local-dev',
+      conversation_id: conversationId
+    };
+
+    logger.breadcrumb('player_taken_calling_dify', {
+      difyUrl: unifiedClient.apiUrl,
+      hasSecretKey: !!unifiedClient.secretKey,
+      timeoutMs: 15000
+    });
+
+    // Use UnifiedDifyClient directly for better error control
+    const result = await unifiedClient.postBlocking({
+      body: difyRequestBody,
+      timeoutMs: 15000,
+      traceId
+    });
+    
+    const duration_ms = Date.now() - t0;
+    
+    if (result.ok) {
+      logger.breadcrumb('player_taken_success', {
+        duration_ms,
+        conversationId: result.conversationId
+      });
+      
+      res.json({
+        ok: true,
+        ack: true,
+        player: { id: player.id, name: player.name },
+        conversationId: result.conversationId,
+        traceId,
+        duration_ms,
+        source: 'dify_success'
+      });
+    } else {
+      // Enhanced error handling with detailed source information
+      logger.breadcrumb('player_taken_dify_error', {
+        error: result.error,
+        status: result.status,
+        duration_ms,
+        upstreamStatus: result.upstreamStatus
+      });
+
+      if (result.error === 'timeout') {
+        res.status(504).json({
+          ok: false,
+          error: 'timeout',
+          message: `Dify API timeout after 15 seconds`,
+          details: {
+            timeoutMs: 15000,
+            actualDuration: duration_ms,
+            phase: 'dify_api_call'
+          },
+          traceId,
+          source: 'dify_timeout',
+          duration_ms
+        });
+      } else if (result.error === 'invalid_conversation') {
+        res.status(409).json({
+          ok: false,
+          error: 'invalid_conversation',
+          message: 'Conversation not found or invalid in Dify',
+          details: {
+            conversationId,
+            upstreamStatus: result.upstreamStatus,
+            bodySnippet: result.bodySnippet
+          },
+          traceId,
+          source: 'dify_conversation_error',
+          duration_ms
+        });
+      } else if (result.error === 'upstream_error') {
+        res.status(502).json({
+          ok: false,
+          error: 'upstream_error',
+          message: `Dify API returned ${result.upstreamStatus || 'unknown'} error`,
+          details: {
+            upstreamStatus: result.upstreamStatus,
+            upstreamMessage: result.message,
+            bodySnippet: result.bodySnippet,
+            difyUrl: unifiedClient.apiUrl
+          },
+          traceId,
+          source: 'dify_upstream_error',
+          duration_ms
+        });
+      } else {
+        res.status(400).json({
+          ok: false,
+          error: 'bad_request',
+          message: result.message || 'Invalid request to Dify API',
+          details: {
+            difyError: result.error,
+            upstreamStatus: result.upstreamStatus,
+            bodySnippet: result.bodySnippet
+          },
+          traceId,
+          source: 'dify_bad_request',
+          duration_ms
+        });
+      }
+    }
+  } catch (error) {
+    const duration_ms = Date.now() - t0;
+    logger.error(error, { context: 'player_taken_handler', duration_ms });
+    
+    // Determine if this is a network error, Dify error, or Node backend error
+    let errorSource = 'node_backend_error';
+    let errorDetails = {
+      errorName: error.name,
+      errorMessage: error.message,
+      stack: error.stack?.split('\n')[0] || 'no stack'
+    };
+
+    if (error.message?.includes('fetch')) {
+      errorSource = 'network_error';
+      errorDetails.networkIssue = 'Failed to connect to Dify API';
+    } else if (error.message?.includes('DIFY') || error.message?.includes('upstream')) {
+      errorSource = 'dify_connection_error';
+    }
+
+    res.status(502).json({
+      ok: false,
+      error: 'server_error',
+      message: `Internal error in player-taken endpoint: ${error.message}`,
+      details: errorDetails,
+      traceId,
+      source: errorSource,
+      duration_ms,
+      helpText: 'Check server logs with traceId for more details'
+    });
+  }
+});
+
+// ROO: User drafted endpoint — blocking, 60s
+app.post("/api/draft/user-drafted", async (req, res) => {
   try {
     const { player, round, pick, conversationId } = req.body;
     
@@ -259,13 +474,13 @@ app.post("/api/draft/player-taken", async (req, res) => {
     res.setTimeout(20000);
     
     // Add route timeout header
-    res.setHeader('X-Route-Timeout', '15000');
+    res.setHeader('X-Route-Timeout', '60000');
 
     // Create small, explicit payload structure
     const user = "fantasy-draft-user";
     const query = `Player taken: ${player.name} (${player.position}, ${player.team?.abbr || ''})`;
     const inputs = {
-      action: 'player-taken',
+      action: 'user-drafted',
       player: {
         id: player.id,
         name: player.name,
@@ -275,16 +490,16 @@ app.post("/api/draft/player-taken", async (req, res) => {
       }
     };
 
-    console.log(`[player-taken] ${player.name} (${player.position}) - round ${round}, pick ${pick}`);
+    console.log(`[user-drafted] ${player.name} (${player.position}) - round ${round}, pick ${pick}`);
 
     // Use blocking call with 15,000ms timeout
     const result = await getDifyBlockingResponse({
-      action: 'player-taken',
+      action: 'user-drafted',
       query,
       inputs,
       user,
       conversationId,
-      timeoutMs: 15000
+      timeoutMs: 60000
     });
     
     if (result.ok) {
@@ -312,7 +527,7 @@ app.post("/api/draft/player-taken", async (req, res) => {
       }
     }
   } catch (error) {
-    console.error('[player-taken] error:', error.message);
+    console.error('[user-drafted] error:', error.message);
     res.status(502).json({ ok: false, error: 'upstream' });
   }
 });

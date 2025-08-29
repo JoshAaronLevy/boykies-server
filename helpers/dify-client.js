@@ -1,19 +1,576 @@
 /**
- * Dify API client with support for both blocking and streaming modes
- * Uses native fetch API instead of axios for streaming support
+ * Unified Dify API client with support for blocking, streaming, and buffered modes
+ * Uses native fetch API with standardized error handling and observability
  */
 
+const crypto = require('crypto');
 const { TextDecoder } = require('util');
 
-// Local compactError function to avoid cross-file import
-function compactError(err, max = 600) {
-  const name = err?.name || 'Error';
-  const msg = (err?.message || String(err)).toString();
-  const stack = (err?.stack || '').split('\n')[1]?.trim() || '';
-  const base = `${name}: ${msg}`;
-  const trimmed = base.length > max ? (base.slice(0, max) + '… [truncated]') : base;
-  return stack ? `${trimmed} | ${stack}` : trimmed;
+// Constants
+const DIFY_API_URL = process.env.DIFY_API_URL || 'https://api.dify.ai/v1/chat-messages';
+const DIFY_SECRET_KEY = process.env.DIFY_SECRET_KEY;
+
+/**
+ * TraceLogger class for observability and breadcrumb tracking
+ */
+class TraceLogger {
+  /**
+   * @param {string|null} traceId - Optional trace ID, generates UUID if not provided
+   */
+  constructor(traceId = null) {
+    this.traceId = traceId || crypto.randomUUID();
+    this.startTime = Date.now();
+  }
+
+  /**
+   * Log a breadcrumb event with timestamp and elapsed time
+   * @param {string} phase - Phase identifier
+   * @param {Object} data - Additional data to log
+   * @returns {Object} - Log entry object
+   */
+  breadcrumb(phase, data = {}) {
+    const timestamp = Date.now();
+    const elapsed = timestamp - this.startTime;
+    const entry = { 
+      traceId: this.traceId, 
+      phase, 
+      timestamp, 
+      elapsed_ms: elapsed,
+      ...data 
+    };
+    
+    console.log(`[${this.traceId}] ${phase}`, entry);
+    return entry;
+  }
+
+  /**
+   * Log payload size warnings
+   * @param {number} bytes - Payload size in bytes
+   * @param {string} context - Context for the warning
+   */
+  payloadWarning(bytes, context = 'unknown') {
+    if (bytes >= 300000) {
+      console.error(`[${this.traceId}][PAYLOAD][ALERT]`, { bytes, context });
+    } else if (bytes >= 150000) {
+      console.warn(`[${this.traceId}][PAYLOAD][WARN]`, { bytes, context });
+    }
+  }
+
+  /**
+   * Log an error with compact formatting
+   * @param {Error} error - Error object
+   * @param {Object} context - Additional context
+   */
+  error(error, context = {}) {
+    const compacted = this.compactError(error);
+    console.error(`[${this.traceId}][ERROR]`, { 
+      error: compacted, 
+      elapsed_ms: Date.now() - this.startTime,
+      ...context 
+    });
+  }
+
+  /**
+   * Compact error for logging (max 600 chars)
+   * @param {Error} err - Error object
+   * @param {number} max - Maximum length
+   * @returns {string} - Compacted error string
+   */
+  compactError(err, max = 600) {
+    const name = err?.name || 'Error';
+    const msg = (err?.message || String(err)).toString();
+    const stack = (err?.stack || '').split('\n')[1]?.trim() || '';
+    const base = `${name}: ${msg}`;
+    const trimmed = base.length > max ? (base.slice(0, max) + '… [truncated]') : base;
+    return stack ? `${trimmed} | ${stack}` : trimmed;
+  }
+
+  /**
+   * Get elapsed time since start
+   * @returns {number} - Elapsed time in milliseconds
+   */
+  elapsed() {
+    return Date.now() - this.startTime;
+  }
 }
+
+/**
+ * Build standardized headers for Dify API requests
+ * @param {Object} options - Options object
+ * @param {boolean} options.streaming - Whether this is a streaming request
+ * @returns {Object} - Headers object
+ */
+function buildHeaders({ streaming = false } = {}) {
+  const headers = {
+    'Authorization': `Bearer ${DIFY_SECRET_KEY}`,
+    'Content-Type': 'application/json'
+  };
+  
+  if (streaming) {
+    headers['Accept'] = 'text/event-stream';
+    headers['Cache-Control'] = 'no-cache';
+  }
+  
+  return headers;
+}
+
+/**
+ * Unified Dify Client class with standardized error handling and observability
+ */
+class UnifiedDifyClient {
+  constructor() {
+    this.apiUrl = DIFY_API_URL;
+    this.secretKey = DIFY_SECRET_KEY;
+    
+    // Validate configuration on construction
+    if (!this.secretKey) {
+      console.error('[DIFY] CRITICAL: DIFY_SECRET_KEY environment variable is not set');
+      throw new Error('DIFY_SECRET_KEY environment variable is required');
+    }
+    
+    if (!this.apiUrl) {
+      console.error('[DIFY] CRITICAL: DIFY_API_URL is not set');
+      throw new Error('DIFY_API_URL is required');
+    }
+    
+    // Validate URL format
+    try {
+      new URL(this.apiUrl);
+    } catch (urlError) {
+      console.error('[DIFY] CRITICAL: Invalid DIFY_API_URL format:', this.apiUrl);
+      throw new Error(`Invalid DIFY_API_URL format: ${this.apiUrl}`);
+    }
+  }
+
+  /**
+   * Build headers for requests
+   * @param {boolean} streaming - Whether this is a streaming request
+   * @returns {Object} - Headers object
+   */
+  buildHeaders(streaming = false) {
+    return buildHeaders({ streaming });
+  }
+
+  /**
+   * Send blocking request to Dify API
+   * @param {Object} params - Request parameters
+   * @param {Object} params.body - Request body (query, inputs, conversation_id, user)
+   * @param {number} params.timeoutMs - Timeout in milliseconds
+   * @param {AbortSignal} params.signal - Optional abort signal
+   * @param {string} params.traceId - Optional trace ID
+   * @returns {Promise<Object>} - Response object
+   */
+  async postBlocking({ body, timeoutMs, signal, traceId }) {
+    const logger = new TraceLogger(traceId);
+    const controller = signal || new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    
+    logger.breadcrumb('dify_blocking_start', {
+      timeoutMs,
+      apiUrl: this.apiUrl,
+      hasSecretKey: !!this.secretKey
+    });
+    
+    // Validate inputs
+    if (!body || typeof body !== 'object') {
+      const error = new Error('Request body is required and must be an object');
+      logger.error(error, { context: 'input_validation' });
+      return this.mapError(error, timeoutMs, logger);
+    }
+    
+    if (!timeoutMs || timeoutMs <= 0) {
+      const error = new Error('timeoutMs must be a positive number');
+      logger.error(error, { context: 'input_validation' });
+      return this.mapError(error, timeoutMs || 15000, logger);
+    }
+    
+    // Check payload size
+    const bodyStr = JSON.stringify({ ...body, response_mode: 'blocking' });
+    const bodyBytes = Buffer.byteLength(bodyStr, 'utf8');
+    logger.payloadWarning(bodyBytes, 'blocking_request');
+    
+    try {
+      logger.breadcrumb('dify_blocking_connect', {
+        bodySize: bodyBytes,
+        headers: Object.keys(this.buildHeaders(false))
+      });
+      
+      const response = await fetch(this.apiUrl, {
+        method: 'POST',
+        headers: this.buildHeaders(false),
+        body: bodyStr,
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeout);
+      logger.breadcrumb('dify_blocking_response', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers ? Object.fromEntries(response.headers.entries()) : 'no headers'
+      });
+      
+      return await this.mapResponse(response, timeoutMs, logger);
+    } catch (error) {
+      clearTimeout(timeout);
+      logger.error(error, {
+        context: 'dify_blocking',
+        apiUrl: this.apiUrl,
+        errorCode: error.code,
+        errorCause: error.cause
+      });
+      return this.mapError(error, timeoutMs, logger);
+    }
+  }
+
+  /**
+   * Send streaming request to Dify API
+   * @param {Object} params - Request parameters
+   * @param {Object} params.body - Request body (query, inputs, conversation_id, user)
+   * @param {number} params.timeoutMs - Timeout in milliseconds
+   * @param {AbortSignal} params.signal - Optional abort signal
+   * @param {string} params.traceId - Optional trace ID
+   * @returns {Promise<Object>} - Object with response, controller, and logger
+   */
+  async postStreaming({ body, timeoutMs, signal, traceId }) {
+    const logger = new TraceLogger(traceId);
+    const controller = signal || new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    
+    logger.breadcrumb('dify_streaming_start', { timeoutMs });
+    
+    // Check payload size
+    const bodyStr = JSON.stringify({ ...body, response_mode: 'streaming' });
+    const bodyBytes = Buffer.byteLength(bodyStr, 'utf8');
+    logger.payloadWarning(bodyBytes, 'streaming_request');
+    
+    try {
+      logger.breadcrumb('dify_streaming_connect');
+      
+      const response = await fetch(this.apiUrl, {
+        method: 'POST',
+        headers: this.buildHeaders(true),
+        body: bodyStr,
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeout);
+      logger.breadcrumb('dify_streaming_response', { status: response.status });
+      
+      if (!response.ok) {
+        const bodyText = await response.text().catch(() => '');
+        const error = this.mapResponseError(response, bodyText, logger);
+        throw error;
+      }
+      
+      logger.breadcrumb('dify_streaming_success');
+      return { response, controller, logger };
+    } catch (error) {
+      clearTimeout(timeout);
+      logger.error(error, { context: 'dify_streaming' });
+      throw this.mapError(error, timeoutMs, logger);
+    }
+  }
+
+  /**
+   * Send streaming request and buffer the response to a single JSON object
+   * This maintains the current streaming→buffer behavior exactly
+   * @param {Object} params - Request parameters
+   * @param {Object} params.body - Request body (query, inputs, conversation_id, user)
+   * @param {number} params.timeoutMs - Timeout in milliseconds
+   * @param {AbortSignal} params.signal - Optional abort signal
+   * @param {string} params.traceId - Optional trace ID
+   * @returns {Promise<Object>} - Buffered response object
+   */
+  async postStreamingBuffered({ body, timeoutMs, signal, traceId }) {
+    const logger = new TraceLogger(traceId);
+    
+    try {
+      const { response, controller } = await this.postStreaming({ body, timeoutMs, signal, traceId });
+      
+      logger.breadcrumb('dify_buffering_start');
+      
+      if (!response.body) {
+        throw new Error('No response body from Dify API');
+      }
+
+      // Consume SSE stream and accumulate final text
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let finalAnswer = '';
+      let finalConversationId = body.conversation_id;
+      let messageId = null;
+      let chunkCount = 0;
+      let eventCounts = {};
+
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            logger.breadcrumb('dify_buffering_complete', { chunkCount, finalAnswerLength: finalAnswer.length });
+            break;
+          }
+          
+          chunkCount++;
+          if (chunkCount === 1) {
+            logger.breadcrumb('dify_first_chunk');
+          }
+          
+          const chunk = decoder.decode(value, { stream: true });
+          buffer += chunk;
+          
+          // Process complete SSE messages
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || ''; // Keep incomplete line in buffer
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                
+                // Count event types
+                eventCounts[data.event] = (eventCounts[data.event] || 0) + 1;
+                
+                // Handle different event types
+                if (data.event === 'message') {
+                  const chunk = data.answer || '';
+                  if (chunk) {
+                    finalAnswer += chunk;
+                  }
+                  finalConversationId = data.conversation_id || finalConversationId;
+                  messageId = data.id || messageId;
+                } else if (data.event === 'agent_message') {
+                  const chunk = data.answer || '';
+                  if (chunk) {
+                    finalAnswer += chunk;
+                  }
+                } else if (data.event === 'agent_thought') {
+                  // Some Dify implementations put the answer in agent_thought events
+                  if (data.thought && !finalAnswer) {
+                    finalAnswer = data.thought;
+                  }
+                } else if (data.event === 'message_end') {
+                  // Stream completed successfully
+                  break;
+                } else if (data.event === 'error') {
+                  throw new Error(`Dify stream error: ${data.message || 'Unknown error'}`);
+                }
+              } catch (parseError) {
+                // Skip malformed JSON lines
+                logger.breadcrumb('dify_parse_error', { line: line.slice(0, 100) });
+              }
+            }
+          }
+        }
+      } catch (streamError) {
+        if (streamError.name === 'AbortError') {
+          throw new Error('Stream timeout after ' + timeoutMs + 'ms');
+        }
+        throw streamError;
+      }
+
+      // Strip <think>...</think> tags from final answer
+      if (finalAnswer) {
+        finalAnswer = finalAnswer.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+      }
+
+      logger.breadcrumb('dify_buffering_success', { 
+        eventCounts, 
+        finalAnswerLength: finalAnswer.length,
+        duration: logger.elapsed()
+      });
+
+      return {
+        ok: true,
+        data: {
+          answer: finalAnswer,
+          conversation_id: finalConversationId,
+          id: messageId,
+          event: 'message'
+        },
+        conversationId: finalConversationId,
+        traceId: logger.traceId,
+        duration_ms: logger.elapsed()
+      };
+
+    } catch (error) {
+      logger.error(error, { context: 'dify_buffering' });
+      
+      // Determine appropriate error type
+      let errorType = 'stream_error';
+      if (error.name === 'AbortError' || error.message.includes('timeout')) {
+        errorType = 'timeout';
+      } else if (error.message.includes('buffer overflow')) {
+        errorType = 'buffer_overflow';
+      }
+      
+      return {
+        ok: false,
+        error: errorType,
+        message: error.message,
+        traceId: logger.traceId,
+        duration_ms: logger.elapsed()
+      };
+    }
+  }
+
+  /**
+   * Map successful response to standardized format
+   * @param {Response} response - Fetch response object
+   * @param {number} timeoutMs - Timeout that was used
+   * @param {TraceLogger} logger - Logger instance
+   * @returns {Promise<Object>} - Mapped response object
+   */
+  async mapResponse(response, timeoutMs, logger) {
+    if (!response.ok) {
+      const bodyText = await response.text().catch(() => '');
+      return this.mapResponseError(response, bodyText, logger);
+    }
+    
+    const data = await response.json();
+    logger.breadcrumb('dify_blocking_success', { conversationId: data.conversation_id });
+    
+    return {
+      ok: true,
+      data,
+      conversationId: data.conversation_id,
+      traceId: logger.traceId,
+      duration_ms: logger.elapsed()
+    };
+  }
+
+  /**
+   * Map response errors to standardized format
+   * @param {Response} response - Fetch response object
+   * @param {string} bodyText - Response body text
+   * @param {TraceLogger} logger - Logger instance
+   * @returns {Object} - Standardized error response
+   */
+  mapResponseError(response, bodyText, logger) {
+    const bodySnippet = bodyText.slice(0, 600);
+    
+    // Handle conversation not found specifically
+    if (response.status === 404 && bodyText.toLowerCase().includes('conversation')) {
+      logger.breadcrumb('dify_error_invalid_conversation', { status: 404 });
+      return {
+        ok: false,
+        status: 409,
+        error: 'invalid_conversation',
+        message: 'Conversation not found or invalid',
+        traceId: logger.traceId,
+        duration_ms: logger.elapsed(),
+        upstreamStatus: response.status,
+        bodySnippet
+      };
+    }
+    
+    // Handle other upstream errors
+    const status = response.status >= 500 ? 502 : 400;
+    const error = response.status >= 500 ? 'upstream_error' : 'bad_request';
+    
+    logger.breadcrumb('dify_error_upstream', { originalStatus: response.status, mappedStatus: status });
+    
+    return {
+      ok: false,
+      status,
+      error,
+      message: `Upstream error: ${response.status} ${response.statusText}`,
+      traceId: logger.traceId,
+      duration_ms: logger.elapsed(),
+      upstreamStatus: response.status,
+      bodySnippet
+    };
+  }
+
+  /**
+   * Map network/timeout errors to standardized format
+   * @param {Error} error - Error object
+   * @param {number} timeoutMs - Timeout that was used
+   * @param {TraceLogger} logger - Logger instance
+   * @returns {Object} - Standardized error response
+   */
+  mapError(error, timeoutMs, logger) {
+    // Log detailed error information for debugging
+    logger.breadcrumb('dify_network_error_details', {
+      errorName: error.name,
+      errorMessage: error.message,
+      errorCode: error.code,
+      errorStack: error.stack?.split('\n')[0] || 'no stack',
+      timeoutMs
+    });
+    
+    if (error.name === 'AbortError') {
+      logger.breadcrumb('dify_error_timeout', { timeoutMs });
+      return {
+        ok: false,
+        status: 504,
+        error: 'timeout',
+        message: `Request timeout after ${timeoutMs}ms`,
+        traceId: logger.traceId,
+        duration_ms: logger.elapsed()
+      };
+    }
+    
+    // Handle specific network error types
+    if (error.code === 'ECONNREFUSED') {
+      logger.breadcrumb('dify_error_connection_refused');
+      return {
+        ok: false,
+        status: 502,
+        error: 'upstream_error',
+        message: 'Could not connect to Dify API - connection refused',
+        traceId: logger.traceId,
+        duration_ms: logger.elapsed(),
+        details: { networkError: 'ECONNREFUSED', difyUrl: this.apiUrl }
+      };
+    }
+    
+    if (error.code === 'ENOTFOUND' || error.code === 'EAI_AGAIN') {
+      logger.breadcrumb('dify_error_dns');
+      return {
+        ok: false,
+        status: 502,
+        error: 'upstream_error',
+        message: 'DNS resolution failed for Dify API',
+        traceId: logger.traceId,
+        duration_ms: logger.elapsed(),
+        details: { networkError: error.code, difyUrl: this.apiUrl }
+      };
+    }
+    
+    if (error.message?.includes('fetch')) {
+      logger.breadcrumb('dify_error_fetch_failed');
+      return {
+        ok: false,
+        status: 502,
+        error: 'upstream_error',
+        message: 'Network request to Dify API failed',
+        traceId: logger.traceId,
+        duration_ms: logger.elapsed(),
+        details: { fetchError: error.message, difyUrl: this.apiUrl }
+      };
+    }
+    
+    logger.breadcrumb('dify_error_unknown_network');
+    
+    return {
+      ok: false,
+      status: 502,
+      error: 'upstream_error',
+      message: `Network error: ${error.message}`,
+      traceId: logger.traceId,
+      duration_ms: logger.elapsed(),
+      details: { unknownError: error.message, difyUrl: this.apiUrl }
+    };
+  }
+}
+
+// Create singleton instance
+const unifiedClient = new UnifiedDifyClient();
+
+// ============================================================================
+// BACKWARD COMPATIBILITY WRAPPERS
+// ============================================================================
 
 /**
  * Trim availablePlayers array if it exceeds the configured maximum
@@ -128,6 +685,38 @@ My current roster: ${JSON.stringify(userRoster)}
 Available players (top options): ${JSON.stringify(availablePlayers)}
 
 Please provide your analysis and recommendations for my next pick.`;
+
+    case 'analyze':
+      // Apply payload trimming for performance optimization
+      const trimmedPickPayload = trimAvailablePlayersIfNeeded(payload);
+      const { round: analysisRound, pick: analysisPick, userRoster: analysisUserRoster, availablePlayers: analysisAvailablePlayers, leagueSize, pickSlot } = trimmedPickPayload;
+      return `Current draft status - Round ${analysisRound}, Pick ${analysisPick}
+
+League context:
+- League size: ${leagueSize} teams
+- My pick slot: ${pickSlot}
+
+My current roster: ${JSON.stringify(analysisUserRoster)}
+Available players (top options): ${JSON.stringify(analysisAvailablePlayers)}
+
+Please provide a comprehensive analysis of my current draft position, roster strengths and weaknesses, and strategic recommendations for upcoming picks.`;
+
+    case 'query':
+      // Apply payload trimming for performance optimization
+      const trimmedQueryPayload = trimAvailablePlayersIfNeeded(payload);
+      const { query: userQuery, round: queryRound, pick: queryPick, userRoster: queryUserRoster, availablePlayers: queryAvailablePlayers, leagueSize: queryLeagueSize, pickSlot: queryPickSlot } = trimmedQueryPayload;
+      return `User query: "${userQuery}"
+
+Current draft status - Round ${queryRound}, Pick ${queryPick}
+
+League context:
+- League size: ${queryLeagueSize} teams
+- My pick slot: ${queryPickSlot}
+
+My current roster: ${JSON.stringify(queryUserRoster)}
+Available players (top options): ${JSON.stringify(queryAvailablePlayers)}
+
+Please respond to the user's query while considering the current draft context and providing relevant analysis and recommendations.`;
       
     default:
       throw new Error(`Unknown action type: ${action}`);
@@ -180,43 +769,33 @@ async function sendToDifyBlocking(action, payload, conversationId = null) {
       timeout = 360000; // 6 minutes for others
     }
     
-    const requestPayload = {
+    const requestBody = {
       inputs: {},
       query: message,
-      response_mode: "blocking",
       conversation_id: conversationId,
       user: "fantasy-draft-user"
     };
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-    const response = await fetch(process.env.DIFY_API_URL || 'https://api.dify.ai/v1/chat-messages', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.DIFY_SECRET_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestPayload),
-      signal: controller.signal
+    const result = await unifiedClient.postBlocking({
+      body: requestBody,
+      timeoutMs: timeout
     });
 
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`Dify API error: ${response.status} ${response.statusText}`);
+    if (result.ok) {
+      return {
+        success: true,
+        data: result.data,
+        conversationId: result.conversationId
+      };
+    } else {
+      return {
+        success: false,
+        error: result.message
+      };
     }
 
-    const data = await response.json();
-    return {
-      success: true,
-      data: data,
-      conversationId: data.conversation_id
-    };
-
   } catch (error) {
-    // console.error('Dify API Error:', error.message);
-    console.error('[error]', compactError(error));
+    console.error('[error]', unifiedClient.compactError ? unifiedClient.compactError(error) : error.message);
     return {
       success: false,
       error: error.message
@@ -275,11 +854,9 @@ async function sendToDifyStreaming(req, res, cleanupAndEnd, action, payload, use
 
   req.on('close', () => connectController.abort());
 
-  let upstream;
   try {
     // Build request payload with structured inputs for initialize
     const isInitialize = action === 'initialize';
-    const maxInitPlayers = Number(process.env.MAX_INIT_PLAYERS || 200);
     
     let difyPayload;
     if (isInitialize) {
@@ -301,7 +878,6 @@ async function sendToDifyStreaming(req, res, cleanupAndEnd, action, payload, use
       difyPayload = {
         user: process.env.DIFY_USER || user || "fantasy-draft-user",
         conversation_id: conversationId || undefined,
-        response_mode: "streaming",
         inputs: initInputs,
         query: 'Initialize draft strategy given these inputs.'
       };
@@ -310,7 +886,6 @@ async function sendToDifyStreaming(req, res, cleanupAndEnd, action, payload, use
       difyPayload = {
         user: process.env.DIFY_USER || user || "fantasy-draft-user",
         conversation_id: conversationId || undefined,
-        response_mode: "streaming",
         inputs: {},
         query: message
       };
@@ -318,44 +893,19 @@ async function sendToDifyStreaming(req, res, cleanupAndEnd, action, payload, use
 
     sendPhase('calling_upstream');
 
-    upstream = await fetch(process.env.DIFY_API_URL || 'https://api.dify.ai/v1/chat-messages', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.DIFY_SECRET_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(difyPayload),
+    const { response } = await unifiedClient.postStreaming({
+      body: difyPayload,
+      timeoutMs,
       signal: connectController.signal
     });
 
-  } finally {
     clearTimeout(connectWatchdog);
-  }
+    clearTimeout(timeout);
 
-  try {
-    console.log('[STREAM] upstream-start', { status: upstream.status });
-    sendPhase('upstream_response', { status: upstream.status, ok: upstream.ok });
+    sendPhase('upstream_response', { status: response.status, ok: response.ok });
 
-    // Surface upstream errors as SSE instead of throwing
-    if (!upstream.body) {
-      res.write(`event: error\ndata: ${JSON.stringify({ message: 'Upstream had no body', status: upstream.status })}\n\n`);
-      cleanupAndEnd();
-      return;
-    }
-    
-    if (!upstream.ok) {
-      let errText = '';
-      try { errText = await upstream.text(); } catch {}
-      res.write(`event: error\ndata: ${JSON.stringify({
-        message: `Upstream ${upstream.status} ${upstream.statusText}`,
-        status: upstream.status,
-        body: (errText || '').slice(0, 500)
-      })}\n\n`);
-      cleanupAndEnd();
-      return;
-    }
-
-    const reader = upstream.body.getReader();
+    // Stream the response directly
+    const reader = response.body.getReader();
     while (true) {
       const { value, done } = await reader.read();
       if (done) break;
@@ -366,16 +916,122 @@ async function sendToDifyStreaming(req, res, cleanupAndEnd, action, payload, use
 
     sendPhase('upstream_end');
     res.write('event: done\ndata: {}\n\n');
-    console.log('[STREAM] upstream-end');
 
   } catch (err) {
-    console.log('[STREAM] upstream-error', { error: String(err) });
+    clearTimeout(connectWatchdog);
+    clearTimeout(timeout);
+    
     if (!res.writableEnded) {
       res.write(`event: error\ndata: ${JSON.stringify({ message: String(err), retryable: false })}\n\n`);
     }
   } finally {
-    clearTimeout(timeout);
     cleanupAndEnd();
+  }
+}
+
+/**
+ * Server-side streaming buffer helper that consumes SSE from Dify and returns single JSON response
+ * @param {string} action - Action type for timeout calculation
+ * @param {Object} payload - Request payload
+ * @param {string|null} conversationId - Conversation ID for context
+ * @param {number} timeoutMs - Timeout in milliseconds (default 295s)
+ * @returns {Promise<Object>} - Single JSON response with accumulated text
+ */
+async function getDifyBufferedResponse(action, payload, conversationId = null, timeoutMs = 295000) {
+  const message = buildDifyMessage(action, payload);
+  
+  const requestBody = {
+    inputs: {},
+    query: message,
+    conversation_id: conversationId,
+    user: "fantasy-draft-user"
+  };
+
+  const result = await unifiedClient.postStreamingBuffered({
+    body: requestBody,
+    timeoutMs
+  });
+
+  // Map to legacy format
+  if (result.ok) {
+    return {
+      success: true,
+      data: result.data,
+      conversationId: result.conversationId,
+      duration: result.duration_ms
+    };
+  } else {
+    return {
+      success: false,
+      error: result.message,
+      errorType: result.error,
+      duration: result.duration_ms
+    };
+  }
+}
+
+/**
+ * Streaming helper returning a Response and an AbortController
+ * @param {Object} params - Parameters object
+ * @param {string} params.action - Action type
+ * @param {string} params.query - Query string
+ * @param {Object} params.inputs - Inputs object
+ * @param {string} params.user - User identifier
+ * @param {string|null} params.conversationId - Conversation ID
+ * @returns {Promise<{response: Response, controller: AbortController}>}
+ */
+async function getDifyStreamingResponse({ action, query, inputs, user, conversationId }) {
+  const payload = {
+    inputs: inputs || {},
+    query: query,
+    user: user || "fantasy-draft-user",
+    conversation_id: conversationId || undefined
+  };
+
+  const result = await unifiedClient.postStreaming({
+    body: payload,
+    timeoutMs: 240000  // Default timeout
+  });
+
+  return { response: result.response, controller: result.controller };
+}
+
+/**
+ * Blocking helper returning parsed JSON
+ * @param {Object} params - Parameters object
+ * @param {string} params.action - Action type
+ * @param {string} params.query - Query string
+ * @param {Object} params.inputs - Inputs object
+ * @param {string} params.user - User identifier
+ * @param {string|null} params.conversationId - Conversation ID
+ * @param {number} params.timeoutMs - Timeout in milliseconds
+ * @returns {Promise<Object>} - Parsed JSON or shaped error object
+ */
+async function getDifyBlockingResponse({ action, query, inputs, user, conversationId, timeoutMs = 15000 }) {
+  const payload = {
+    inputs: inputs || {},
+    query: query,
+    user: user || "fantasy-draft-user",
+    conversation_id: conversationId || undefined
+  };
+
+  const result = await unifiedClient.postBlocking({
+    body: payload,
+    timeoutMs
+  });
+
+  if (result.ok) {
+    return {
+      ok: true,
+      data: result.data,
+      conversationId: result.conversationId
+    };
+  } else {
+    return {
+      ok: false,
+      status: result.status,
+      message: result.message
+    };
   }
 }
 
@@ -486,303 +1142,28 @@ async function sendTestMessageStreaming(req, res, cleanupAndEnd) {
   return await sendToDifyStreaming(req, res, cleanupAndEnd, 'legacy', { query: 'Hello' }, 'test-user');
 }
 
-/**
- * Streaming helper returning a Response and an AbortController
- * @param {Object} params - Parameters object
- * @param {string} params.action - Action type
- * @param {string} params.query - Query string
- * @param {Object} params.inputs - Inputs object
- * @param {string} params.user - User identifier
- * @param {string|null} params.conversationId - Conversation ID
- * @returns {Promise<{response: Response, controller: AbortController}>}
- */
-// ROO: candidate location for SSE buffer-to-JSON pattern
+// ============================================================================
+// SERVER STARTUP LOGGING
+// ============================================================================
 
-/**
- * Server-side streaming buffer helper that consumes SSE from Dify and returns single JSON response
- * @param {string} action - Action type for timeout calculation
- * @param {Object} payload - Request payload
- * @param {string|null} conversationId - Conversation ID for context
- * @param {number} timeoutMs - Timeout in milliseconds (default 295s)
- * @returns {Promise<Object>} - Single JSON response with accumulated text
- */
-async function getDifyBufferedResponse(action, payload, conversationId = null, timeoutMs = 295000) {
-  const { TextDecoder } = require('util');
-  const startTime = Date.now();
-  
-  console.log('[BUFFER] Starting getDifyBufferedResponse', { action, conversationId, timeoutMs });
-  
-  try {
-    const message = buildDifyMessage(action, payload);
-    console.log('[BUFFER] Built message for action:', action, 'Message length:', message.length);
-    
-    // Build request payload
-    const requestPayload = {
-      inputs: {},
-      query: message,
-      response_mode: "streaming",
-      conversation_id: conversationId,
-      user: "fantasy-draft-user"
-    };
+// Log Dify configuration on first import
+console.info('[DIFY]', { 
+  url: DIFY_API_URL, 
+  keyPrefix: DIFY_SECRET_KEY?.slice(0, 4) + '…' 
+});
 
-    console.log('[BUFFER] Request payload:', JSON.stringify(requestPayload, null, 2));
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-    console.log('[BUFFER] Making fetch request to:', process.env.DIFY_API_URL);
-    const response = await fetch(process.env.DIFY_API_URL || 'https://api.dify.ai/v1/chat-messages', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.DIFY_SECRET_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestPayload),
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-    console.log('[BUFFER] Fetch response status:', response.status, 'ok:', response.ok);
-
-    if (!response.ok) {
-      throw new Error(`Dify API error: ${response.status} ${response.statusText}`);
-    }
-
-    if (!response.body) {
-      throw new Error('No response body from Dify API');
-    }
-
-    // Consume SSE stream and accumulate final text
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    let finalAnswer = '';
-    let finalConversationId = conversationId;
-    let messageId = null;
-    let chunkCount = 0;
-    let eventCounts = {};
-
-    console.log('[BUFFER] Starting SSE stream processing');
-
-    try {
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-          console.log('[BUFFER] Stream reading completed, total chunks:', chunkCount);
-          break;
-        }
-        
-        chunkCount++;
-        const chunk = decoder.decode(value, { stream: true });
-        buffer += chunk;
-        
-        // Process complete SSE messages
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || ''; // Keep incomplete line in buffer
-        
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              
-              // Count event types
-              eventCounts[data.event] = (eventCounts[data.event] || 0) + 1;
-              
-              console.log('[BUFFER] SSE Event:', data.event, 'Data keys:', Object.keys(data));
-              
-              // Handle different event types
-              if (data.event === 'message') {
-                const chunk = data.answer || '';
-                console.log('[BUFFER] Message event - answer chunk:', chunk ? `${chunk.length} chars: "${chunk.slice(0, 50)}..."` : 'null/undefined');
-                console.log('[BUFFER] Message event - conversation_id:', data.conversation_id);
-                console.log('[BUFFER] Message event - id:', data.id);
-                
-                // ACCUMULATE chunks instead of overwriting
-                if (chunk) {
-                  finalAnswer += chunk;
-                  console.log('[BUFFER] Accumulated answer length:', finalAnswer.length);
-                }
-                
-                finalConversationId = data.conversation_id || finalConversationId;
-                messageId = data.id || messageId;
-              } else if (data.event === 'agent_message') {
-                const chunk = data.answer || '';
-                console.log('[BUFFER] Agent message event - answer chunk:', chunk ? `${chunk.length} chars: "${chunk.slice(0, 50)}..."` : 'null/undefined');
-                // ACCUMULATE chunks instead of overwriting
-                if (chunk) {
-                  finalAnswer += chunk;
-                  console.log('[BUFFER] Accumulated answer length:', finalAnswer.length);
-                }
-              } else if (data.event === 'agent_thought') {
-                console.log('[BUFFER] Agent thought event - thought:', data.thought ? `${data.thought.length} chars` : 'null/undefined');
-                // Some Dify implementations put the answer in agent_thought events
-                if (data.thought && !finalAnswer) {
-                  finalAnswer = data.thought;
-                }
-              } else if (data.event === 'message_file') {
-                console.log('[BUFFER] Message file event');
-                // Handle file events if needed
-              } else if (data.event === 'message_end') {
-                console.log('[BUFFER] Message end event - final answer length:', finalAnswer.length);
-                // Stream completed successfully
-                break;
-              } else if (data.event === 'error') {
-                console.log('[BUFFER] Error event:', data.message);
-                throw new Error(`Dify stream error: ${data.message || 'Unknown error'}`);
-              } else {
-                console.log('[BUFFER] Unknown event type:', data.event, 'Full data:', JSON.stringify(data));
-              }
-            } catch (parseError) {
-              // Skip malformed JSON lines
-              console.warn('[BUFFER] Failed to parse SSE line:', line.slice(0, 100), 'Error:', parseError.message);
-            }
-          } else if (line.trim()) {
-            console.log('[BUFFER] Non-data SSE line:', line.slice(0, 100));
-          }
-        }
-      }
-    } catch (streamError) {
-      console.log('[BUFFER] Stream reading error:', streamError.message);
-      // Handle stream reading errors
-      if (streamError.name === 'AbortError') {
-        throw new Error('Stream timeout after ' + timeoutMs + 'ms');
-      }
-      throw streamError;
-    }
-
-    console.log('[BUFFER] Event counts:', eventCounts);
-    console.log('[BUFFER] Final answer length:', finalAnswer.length);
-    console.log('[BUFFER] Final answer preview:', finalAnswer.slice(0, 200));
-
-    // Strip <think>...</think> tags from final answer
-    if (finalAnswer) {
-      finalAnswer = finalAnswer.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
-      console.log('[BUFFER] After stripping think tags, length:', finalAnswer.length);
-    }
-
-    const duration = Date.now() - startTime;
-    console.log('[BUFFER] Total duration:', duration, 'ms');
-
-    return {
-      success: true,
-      data: {
-        answer: finalAnswer,
-        conversation_id: finalConversationId,
-        id: messageId,
-        event: 'message'
-      },
-      conversationId: finalConversationId,
-      duration: duration
-    };
-
-  } catch (error) {
-    const duration = Date.now() - startTime;
-    console.error('[BUFFER] Error:', compactError(error));
-    
-    // Determine appropriate error type
-    let errorType = 'stream_error';
-    if (error.name === 'AbortError' || error.message.includes('timeout')) {
-      errorType = 'timeout';
-    } else if (error.message.includes('buffer overflow')) {
-      errorType = 'buffer_overflow';
-    }
-    
-    return {
-      success: false,
-      error: error.message,
-      errorType: errorType,
-      duration: duration
-    };
-  }
-}
-
-async function getDifyStreamingResponse({ action, query, inputs, user, conversationId }) {
-  const controller = new AbortController();
-  
-  const payload = {
-    inputs: inputs || {},
-    query: query,
-    user: user || "fantasy-draft-user",
-    conversation_id: conversationId || undefined,
-    response_mode: "streaming"
-  };
-
-  const response = await fetch(process.env.DIFY_API_URL || 'https://api.dify.ai/v1/chat-messages', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.DIFY_SECRET_KEY}`,
-      'Content-Type': 'application/json' // ROO: missing Accept: text/event-stream for streaming calls
-    },
-    body: JSON.stringify(payload),
-    signal: controller.signal
-  });
-
-  return { response, controller };
-}
-
-/**
- * Blocking helper returning parsed JSON
- * @param {Object} params - Parameters object
- * @param {string} params.action - Action type
- * @param {string} params.query - Query string
- * @param {Object} params.inputs - Inputs object
- * @param {string} params.user - User identifier
- * @param {string|null} params.conversationId - Conversation ID
- * @param {number} params.timeoutMs - Timeout in milliseconds
- * @returns {Promise<Object>} - Parsed JSON or shaped error object
- */
-async function getDifyBlockingResponse({ action, query, inputs, user, conversationId, timeoutMs = 15000 }) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    const payload = {
-      inputs: inputs || {},
-      query: query,
-      user: user || "fantasy-draft-user",
-      conversation_id: conversationId || undefined,
-      response_mode: "blocking"
-    };
-
-    const response = await fetch(process.env.DIFY_API_URL || 'https://api.dify.ai/v1/chat-messages', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.DIFY_SECRET_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-      signal: controller.signal
-    });
-
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      return {
-        ok: false,
-        status: response.status,
-        message: `Dify API error: ${response.status} ${response.statusText}`
-      };
-    }
-
-    const data = await response.json();
-    return {
-      ok: true,
-      data: data,
-      conversationId: data.conversation_id
-    };
-
-  } catch (error) {
-    clearTimeout(timeout);
-    console.error('[error]', compactError(error));
-    return {
-      ok: false,
-      status: error.name === 'AbortError' ? 408 : 500,
-      message: error.message
-    };
-  }
-}
+// ============================================================================
+// EXPORTS
+// ============================================================================
 
 module.exports = {
+  // New unified exports
+  DIFY_API_URL,
+  buildHeaders,
+  UnifiedDifyClient,
+  TraceLogger,
+  
+  // Backward compatibility exports
   sendToDifyBlocking,
   sendToDifyStreaming,
   validateStreamingRequest,

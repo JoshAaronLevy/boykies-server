@@ -395,4 +395,179 @@ router.post('/user-turn', async (req, res) => {
   }
 });
 
+// POST /api/draft/analyze - Pick analysis endpoint
+router.post('/analyze', async (req, res) => {
+  const t0 = Date.now();
+  res.setTimeout(120_000);
+  
+  try {
+    const user           = req.body?.user || 'local-dev';
+    const conversationId = req.body?.conversationId;
+    const p              = req.body?.payload || {};
+
+    // Map pickNumber -> pick
+    const round          = Number(p.round);
+    const pick           = p.pick != null ? Number(p.pick) : Number(p.pickNumber);
+    const userRoster     = Array.isArray(p.userRoster) ? p.userRoster : [];
+    const availablePlayers = Array.isArray(p.availablePlayers) ? p.availablePlayers : [];
+    const leagueSize     = Number(p.leagueSize);
+    const pickSlot       = Number(p.pickSlot);
+
+    // Validation
+    const missing = [];
+    if (!conversationId) missing.push('conversationId');
+    if (!Number.isFinite(round)) missing.push('round');
+    if (!Number.isFinite(pick)) missing.push('pick');
+    if (!Array.isArray(p.userRoster)) missing.push('userRoster');
+    if (!Array.isArray(p.availablePlayers)) missing.push('availablePlayers');
+    if (!Number.isFinite(leagueSize)) missing.push('leagueSize');
+    if (!Number.isFinite(pickSlot)) missing.push('pickSlot');
+    if (missing.length) {
+      return res.status(400).json({ error: `Missing required fields: ${missing.join(', ')}` });
+    }
+
+    // Build Dify body (forced trigger with analyze action)
+    const query = "analyze";
+    const inputs = { action: 'analyze', round, pick, userRoster, availablePlayers, leagueSize, pickSlot };
+
+    // Byte-size log (warn/error only)
+    const difyBodyForLog = { user, query, response_mode: 'streaming', inputs, conversation_id: conversationId };
+    const bytes = bytesOf(difyBodyForLog);
+    if (bytes >= 300_000) {
+      console.error('[PAYLOAD][ALERT] /draft/analyze bytes', { bytes, count: availablePlayers.length });
+    } else if (bytes >= 150_000) {
+      console.warn('[PAYLOAD][WARN] /draft/analyze bytes',  { bytes, count: availablePlayers.length });
+    }
+
+    const result = await getDifyBufferedResponse('analyze', { query, round, pick, userRoster, availablePlayers, leagueSize, pickSlot }, conversationId, 90_000);
+
+    res.set('X-Backend-Timing', String(Date.now() - t0));
+    res.set('X-Streamed', 'true');
+    if (result?.conversationId) res.set('X-Conversation-Id', String(result.conversationId));
+
+    if (!result?.success) {
+      const isTimeout = result?.errorType === 'timeout' || result?.error?.includes('cloudflare');
+      const status = isTimeout ? 504 : 502;
+      const error = isTimeout ? (result?.error?.includes('cloudflare') ? 'cloudflare_timeout' : 'timeout') : 'upstream';
+      return res.status(status).json({
+        ok: false,
+        error,
+        message: result?.error || 'Unknown error',
+        duration_ms: Date.now() - t0
+      });
+    }
+
+    // Strip <think>...</think> tags from final answer
+    let answer = result.data?.answer || null;
+    if (answer) {
+      answer = answer.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    }
+
+    return res.status(200).json({
+      ok: true,
+      conversationId: result.conversationId || null,
+      answer,
+      usage: result.data?.usage,
+      duration_ms: Date.now() - t0
+    });
+  } catch (err) {
+    const isAbort = err?.name === 'AbortError';
+    return res.status(isAbort ? 504 : 502).json({
+      ok: false,
+      error: isAbort ? 'timeout' : 'handler_error',
+      message: String(err),
+      duration_ms: Date.now() - t0,
+    });
+  }
+});
+
+// POST /api/draft/query - Query endpoint that preserves user input
+router.post('/query', async (req, res) => {
+  const t0 = Date.now();
+  res.setTimeout(120_000);
+  
+  try {
+    const user           = req.body?.user || 'local-dev';
+    const conversationId = req.body?.conversationId;
+    const p              = req.body?.payload || {};
+
+    // Extract user query/message from supported locations
+    let userQuery = req.body?.query ||
+                   req.body?.payload?.query ||
+                   req.body?.message ||
+                   req.body?.payload?.message;
+
+    // Map pickNumber -> pick
+    const round          = Number(p.round);
+    const pick           = p.pick != null ? Number(p.pick) : Number(p.pickNumber);
+    const userRoster     = Array.isArray(p.userRoster) ? p.userRoster : [];
+    const availablePlayers = Array.isArray(p.availablePlayers) ? p.availablePlayers : [];
+    const leagueSize     = Number(p.leagueSize);
+    const pickSlot       = Number(p.pickSlot);
+
+    // Validation
+    const missing = [];
+    if (!conversationId) missing.push('conversationId');
+    if (!userQuery) missing.push('query/message');
+    if (!Number.isFinite(round)) missing.push('round');
+    if (!Number.isFinite(pick)) missing.push('pick');
+    if (!Array.isArray(p.userRoster)) missing.push('userRoster');
+    if (!Array.isArray(p.availablePlayers)) missing.push('availablePlayers');
+    if (!Number.isFinite(leagueSize)) missing.push('leagueSize');
+    if (!Number.isFinite(pickSlot)) missing.push('pickSlot');
+    if (missing.length) {
+      return res.status(400).json({ error: `Missing required fields: ${missing.join(', ')}` });
+    }
+
+    // Byte-size log (warn/error only)
+    const difyBodyForLog = { user, query: userQuery, response_mode: 'streaming', inputs: { action: 'query', round, pick, userRoster, availablePlayers, leagueSize, pickSlot }, conversation_id: conversationId };
+    const bytes = bytesOf(difyBodyForLog);
+    if (bytes >= 300_000) {
+      console.error('[PAYLOAD][ALERT] /draft/query bytes', { bytes, count: availablePlayers.length });
+    } else if (bytes >= 150_000) {
+      console.warn('[PAYLOAD][WARN] /draft/query bytes',  { bytes, count: availablePlayers.length });
+    }
+
+    const result = await getDifyBufferedResponse('query', { query: userQuery, round, pick, userRoster, availablePlayers, leagueSize, pickSlot }, conversationId, 90_000);
+
+    res.set('X-Backend-Timing', String(Date.now() - t0));
+    res.set('X-Streamed', 'true');
+    if (result?.conversationId) res.set('X-Conversation-Id', String(result.conversationId));
+
+    if (!result?.success) {
+      const isTimeout = result?.errorType === 'timeout' || result?.error?.includes('cloudflare');
+      const status = isTimeout ? 504 : 502;
+      const error = isTimeout ? (result?.error?.includes('cloudflare') ? 'cloudflare_timeout' : 'timeout') : 'upstream';
+      return res.status(status).json({
+        ok: false,
+        error,
+        message: result?.error || 'Unknown error',
+        duration_ms: Date.now() - t0
+      });
+    }
+
+    // Strip <think>...</think> tags from final answer
+    let answer = result.data?.answer || null;
+    if (answer) {
+      answer = answer.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+    }
+
+    return res.status(200).json({
+      ok: true,
+      conversationId: result.conversationId || null,
+      answer,
+      usage: result.data?.usage,
+      duration_ms: Date.now() - t0
+    });
+  } catch (err) {
+    const isAbort = err?.name === 'AbortError';
+    return res.status(isAbort ? 504 : 502).json({
+      ok: false,
+      error: isAbort ? 'timeout' : 'handler_error',
+      message: String(err),
+      duration_ms: Date.now() - t0,
+    });
+  }
+});
+
 module.exports = router;

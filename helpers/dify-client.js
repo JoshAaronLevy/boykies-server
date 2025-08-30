@@ -236,6 +236,11 @@ class UnifiedDifyClient {
     const controller = signal || new AbortController();
     const timeout = setTimeout(() => controller.abort(), timeoutMs);
     
+    // Add trace logging for initialize streaming
+    if (body && body.inputs && body.inputs.action === 'initialize') {
+      console.info('[TRACE_INIT] path=client');
+    }
+    
     logger.breadcrumb('dify_streaming_start', { timeoutMs });
     
     // Check payload size
@@ -250,7 +255,8 @@ class UnifiedDifyClient {
         method: 'POST',
         headers: this.buildHeaders(true),
         body: bodyStr,
-        signal: controller.signal
+        signal: controller.signal,
+        duplex: 'half'
       });
       
       clearTimeout(timeout);

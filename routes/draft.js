@@ -98,7 +98,7 @@ router.post('/marco', async (req, res) => {
   }
 });
 
-// POST /api/draft/initialize - Server-side streaming buffer endpoint
+// POST /api/draft/initialize - Server-side streaming buffer endpoint with optional streaming mode
 router.post('/initialize', async (req, res) => {
   const startTime = Date.now();
   
@@ -107,6 +107,7 @@ router.post('/initialize', async (req, res) => {
   
   try {
     const { user, conversationId, payload } = req.body;
+    const isStreaming = req.query.stream;
 
     // Validation
     if (!user) {
@@ -160,7 +161,395 @@ router.post('/initialize', async (req, res) => {
       });
     }
 
-    // Use streaming buffer approach with 295s timeout
+    // Handle streaming mode
+    if (isStreaming) {
+      const wantsStream = req.query.stream;
+      const simulate = req.query.simulate;
+      const timeoutMs = 235000; // ~235s (≈3:55)
+      
+      // Debug instrumentation
+      if (process.env.DEBUG_STREAM_INIT) {
+        console.log(`[DEBUG_STREAM_INIT] Route entry: wantsStream=${wantsStream}, simulate=${simulate}, timeout=${timeoutMs}ms`);
+      }
+      
+      // Simulation mode for testing streaming pipeline
+      if (simulate) {
+        // Set NDJSON streaming headers
+        res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache, no-transform');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no');
+        res.flushHeaders?.();
+        
+        if (process.env.DEBUG_STREAM_INIT) {
+          console.log('[DEBUG_STREAM_INIT] Headers flushed for simulation');
+        }
+
+        const tokens = ['Creating', 'your', 'draft', 'strategy', 'based', 'on', 'team', 'analysis', 'and', 'player', 'data', 'Complete!'];
+        for (let i = 0; i < tokens.length; i++) {
+          await new Promise(resolve => setTimeout(resolve, 200));
+          res.write(JSON.stringify({ type: 'text', data: `token ${i+1}: ${tokens[i]}` }) + '\n');
+          res.flush?.();
+        }
+        res.write(JSON.stringify({ type: 'final', data: 'Simulation complete' }) + '\n');
+        return res.end();
+      }
+
+      // Set NDJSON streaming headers
+      res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-cache, no-transform');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('X-Accel-Buffering', 'no');
+      res.flushHeaders?.();
+      
+      if (process.env.DEBUG_STREAM_INIT) {
+        console.log('[DEBUG_STREAM_INIT] Headers flushed for real streaming');
+      }
+
+      // Set up AbortController for client disconnects and timeout
+      const controller = new AbortController();
+      const controllerId = Math.random().toString(36).substr(2, 9);
+      let clientAborted = false;
+      
+      if (process.env.DEBUG_STREAM_INIT) {
+        console.log(`[DEBUG_STREAM_INIT] AbortController created: id=${controllerId}, timeout=${timeoutMs}ms`);
+      }
+      
+      // Safety timeout that persists throughout entire stream lifecycle
+      const timeoutId = setTimeout(() => {
+        if (process.env.DEBUG_STREAM_INIT) {
+          console.log(`[DEBUG_STREAM_INIT] Safety timeout fired for controller=${controllerId}`);
+        }
+        console.log('[STREAMING][initialize] Safety timeout triggered after 235s');
+        controller.abort('timeout');
+      }, timeoutMs);
+
+      // Handle client abort - Track abort and abort controller
+      req.on('aborted', () => {
+        clientAborted = true;
+        if (!res.writableEnded && !streamCompleted) {
+          controller.abort(new Error('client-aborted'));
+        }
+      });
+
+      try {
+        // Build Dify request payload for initialize
+        const difyPayload = {
+          user: user,
+          response_mode: 'streaming',
+          query: 'initialize',
+          inputs: {
+            action: 'initialize',
+            numTeams: payload.numTeams,
+            userPickPosition: payload.userPickPosition,
+            availablePlayers: payload.players || payload.availablePlayers || []
+          }
+        };
+
+        if (conversationId) {
+          difyPayload.conversation_id = conversationId;
+        }
+
+        // Debug instrumentation - emit NDJSON debug line when debug=1
+        if (req.query.debug == '1') {
+          const debugEvent = {
+            event: "debug",
+            data: {
+              path: "routes/draft",
+              difyBodyKeys: Object.keys(difyPayload || {}),
+              inputsKeys: Object.keys((difyPayload && difyPayload.inputs) || {})
+            }
+          };
+          res.write(JSON.stringify(debugEvent) + '\n');
+        }
+
+        // Add debug logging for body structure
+        console.info('[dify:body:init]', Object.keys(difyPayload), Object.keys(difyPayload.inputs||{}));
+
+        // Initialize keepalive ping functionality
+        let firstChunkSeen = false;
+        const pingInterval = setInterval(() => {
+          if (!firstChunkSeen && !res.writableEnded) {
+            res.write(JSON.stringify({ event: "ping", data: { ts: Date.now() } }) + "\n");
+          }
+        }, 10000);
+
+        if (process.env.DEBUG_STREAM_INIT) {
+          console.log(`[DEBUG_STREAM_INIT] Upstream fetch start: URL=${DIFY_API_URL}, Accept=text/event-stream`);
+        }
+        
+        // Make streaming call to Dify API directly
+        const response = await fetch(DIFY_API_URL, {
+          method: 'POST',
+          headers: {
+            'Accept': 'text/event-stream',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + DIFY_SECRET_KEY
+          },
+          body: JSON.stringify(difyPayload),
+          signal: controller.signal,
+          duplex: 'half'
+        });
+// CRITICAL FIX: Do NOT clear timeout after fetch succeeds
+// Keep timeout active during entire stream processing lifecycle
+
+// Preflight check for upstream response
+const status = response.status;
+const contentType = response.headers.get('content-type') || '';
+
+if (!response.ok || !contentType.includes('text/event-stream')) {
+  // Read up to first 512 bytes from response body if present
+  let bodyPreview = '';
+  try {
+    if (response.body) {
+      const reader = response.body.getReader();
+      const { value } = await reader.read();
+      if (value) {
+        const decoder = new TextDecoder();
+        const fullText = decoder.decode(value);
+        bodyPreview = fullText.slice(0, 200); // First 200 chars, sanitized
+      }
+    }
+  } catch (bodyReadError) {
+    bodyPreview = 'Error reading response body';
+  }
+  
+  // Write ONE NDJSON error line
+  const errorEvent = {
+    event: 'error',
+    data: {
+      error: 'bad_upstream_status',
+      status: status,
+      contentType: contentType,
+      bodyPreview: bodyPreview,
+      hasUrl: !!process.env.DIFY_API_URL,
+      hasKey: !!process.env.DIFY_SECRET_KEY
+    }
+  };
+  
+  res.write(JSON.stringify(errorEvent) + '\n');
+  res.end();
+  return;
+}
+
+// Process SSE stream and transform to NDJSON
+const reader = response.body?.getReader();
+if (!reader) {
+  const text = await response.text();
+  res.write(JSON.stringify({ type: 'final', data: text }) + '\n');
+  return res.end();
+}
+const decoder = new TextDecoder();
+let buffer = '';
+let finalConversationId = conversationId;
+let chunkCount = 0;
+let firstChunkReceived = false;
+let streamCompleted = false;
+
+try {
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+
+    chunkCount++;
+    if (!firstChunkReceived) {
+      firstChunkReceived = true;
+      firstChunkSeen = true;
+      clearInterval(pingInterval);
+      if (process.env.DEBUG_STREAM_INIT) {
+        console.log('[DEBUG_STREAM_INIT] First upstream chunk received');
+      }
+    }
+    
+    // Occasionally log chunk count for debugging
+    if (process.env.DEBUG_STREAM_INIT && chunkCount % 10 === 0) {
+      console.log(`[DEBUG_STREAM_INIT] Processed ${chunkCount} chunks`);
+    }
+    
+    const chunk = decoder.decode(value, { stream: true });
+    buffer += chunk;
+
+    // Process complete SSE events (separated by \n\n)
+    let sep;
+    while ((sep = buffer.indexOf('\n\n')) !== -1) {
+      const chunk = buffer.slice(0, sep);
+      buffer = buffer.slice(sep + 2);
+      
+      // Process this complete SSE frame
+      const lines = chunk.split('\n');
+      const datas = lines
+        .filter(l => l.startsWith('data:'))
+        .map(l => l.slice(5).trim())
+        .filter(Boolean);
+        
+      for (const payload of datas) {
+        if (payload === '[DONE]') continue;  // Handle [DONE]
+        
+        try {
+          const data = JSON.parse(payload);
+          
+          // Track conversation ID
+          if (data.conversation_id) {
+            finalConversationId = data.conversation_id;
+          }
+
+          // Transform SSE event to NDJSON and write to response
+          const ndjsonEvent = {
+            event: data.event,
+            data: data
+          };
+
+          // Write NDJSON line
+          res.write(JSON.stringify(ndjsonEvent) + '\n');
+          res.flush?.();
+
+          // Handle stream completion
+          if (data.event === 'message_end') {
+            streamCompleted = true;
+            break;
+          } else if (data.event === 'error') {
+            throw new Error(`Dify stream error: ${data.message || 'Unknown error'}`);
+          }
+        } catch (error) {
+          // Fallback for non-JSON data
+          const ndjsonEvent = { type: 'text', data: payload };
+          res.write(JSON.stringify(ndjsonEvent) + '\n');
+          res.flush?.();
+        }
+      }
+    }
+  }
+
+  if (process.env.DEBUG_STREAM_INIT) {
+    console.log('[DEBUG_STREAM_INIT] Upstream stream done normally');
+  }
+
+  // Send final completion event only if stream completed normally
+  if (streamCompleted) {
+    const completionEvent = {
+      event: 'complete',
+      data: {
+        conversationId: finalConversationId,
+        duration_ms: Date.now() - startTime
+      }
+    };
+    res.write(JSON.stringify(completionEvent) + '\n');
+    res.flush?.();
+  }
+
+} catch (streamError) {
+  if (process.env.DEBUG_STREAM_INIT) {
+    console.log(`[DEBUG_STREAM_INIT] Stream error: ${streamError.name} - ${streamError.message}`);
+  }
+  
+  // Add debug line for client aborts when debug=1
+  if (req.query.debug == '1' && clientAborted) {
+    res.write(JSON.stringify({ event: "debug", data: { path: "routes/draft", note: "client_aborted" } }) + "\n");
+  }
+  
+  // FIXED: Only emit error on real timeout and upstream failures, NOT client disconnects
+  if (streamError.name === 'AbortError') {
+    // Check abort reason to determine if it's timeout or client disconnect
+    const isTimeout = controller.signal.reason === 'timeout';
+    
+    if (isTimeout) {
+      const errorEvent = {
+        event: 'error',
+        data: {
+          error: 'timeout',
+          message: 'Stream timeout after 235s'
+        }
+      };
+      res.write(JSON.stringify(errorEvent) + '\n');
+      res.flush?.();
+    }
+    // Do NOT emit error NDJSON for client disconnects - just let stream end
+  } else {
+    const name = streamError?.name || (typeof streamError === 'string' ? 'AbortError' : typeof streamError);
+    const code = streamError?.code || streamError?.cause?.code || (clientAborted ? 'client_aborted' : 'unknown');
+    const message = String(streamError?.message || streamError);
+    
+    const errorEvent = {
+      event: 'error',
+      data: {
+        error: 'fetch_error',
+        name: name,
+        code: code,
+        message: message,
+        hasUrl: !!process.env.DIFY_API_URL,
+        hasKey: !!process.env.DIFY_SECRET_KEY
+      }
+    };
+    res.write(JSON.stringify(errorEvent) + '\n');
+    res.flush?.();
+  }
+} finally {
+  if (process.env.DEBUG_STREAM_INIT) {
+    console.log(`[DEBUG_STREAM_INIT] Ending stream, writableEnded=${res.writableEnded}, clientAborted=${clientAborted}`);
+  }
+  
+  // CRITICAL FIX: Clear timeout and ping interval in finally block
+  clearTimeout(timeoutId);
+  clearInterval(pingInterval);
+  
+  // For client closes, just end the response without error
+  res.end();
+}
+
+} catch (error) {
+// CRITICAL FIX: Clear timeout and ping interval here too
+clearTimeout(timeoutId);
+clearInterval(pingInterval);
+
+if (!res.headersSent) {
+  // Headers not sent yet, send NDJSON error
+  res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+}
+
+// FIXED: Only send NDJSON error for real errors, NOT client disconnects
+if (error.name === 'AbortError' && controller.signal.reason === 'client-aborted') {
+  // Don't emit error for client disconnects - just log and end
+  if (process.env.DEBUG_STREAM_INIT) {
+    console.log('[DEBUG_STREAM_INIT] Skipping error emission for client disconnect');
+  }
+} else {
+  // Enhanced error diagnostics matching exact format specified
+  const name = error?.name || (typeof error === 'string' ? 'AbortError' : typeof error);
+  const code = error?.code || error?.cause?.code || (clientAborted ? 'client_aborted' : 'unknown');
+  const message = String(error?.message || error);
+  
+  const errorEvent = {
+    event: 'error',
+    data: {
+      error: 'fetch_error',
+      name: name,
+      code: code,
+      message: message,
+      hasUrl: !!process.env.DIFY_API_URL,
+      hasKey: !!process.env.DIFY_SECRET_KEY
+    }
+  };
+  
+  // Console.error the same object
+  console.error(errorEvent.data);
+  
+  res.write(JSON.stringify(errorEvent) + '\n');
+  res.flush?.();
+}
+res.end();
+      } finally {
+        if (process.env.DEBUG_STREAM_INIT) {
+          console.log('[DEBUG_STREAM_INIT] Final cleanup');
+        }
+      }
+
+      return; // End streaming path here
+    }
+
+    // Non-streaming path: Use existing streaming buffer approach with 295s timeout
     const result = await getDifyBufferedResponse('initialize', payload, conversationId, 295000);
     
     const duration = Date.now() - startTime;
@@ -567,6 +956,217 @@ router.post('/query', async (req, res) => {
       message: String(err),
       duration_ms: Date.now() - t0,
     });
+  }
+});
+
+// POST /api/_debug/init-raw - DEV-only Debug Route for Initialize Streaming
+router.post('/_debug/init-raw', async (req, res) => {
+  // Guard with NODE_ENV check
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ error: 'Not found' });
+  }
+
+  try {
+    // Read same body as /api/draft/initialize
+    const { user, payload } = req.body;
+    
+    if (!user || !payload) {
+      return res.status(400).json({
+        event: 'error',
+        data: { error: 'Missing user or payload' }
+      });
+    }
+
+    const { numTeams, userPickPosition, players, availablePlayers } = payload;
+    
+    // Construct exact Dify body
+    const body = {
+      user: user,
+      response_mode: "streaming",
+      query: "initialize",
+      inputs: {
+        action: "initialize",
+        numTeams: numTeams,
+        userPickPosition: userPickPosition,
+        availablePlayers: availablePlayers || players || []
+      }
+    };
+
+    // Set up AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort('timeout'), 235000);
+
+    // Set NDJSON headers FIRST
+    res.setHeader('Content-Type', 'application/x-ndjson');
+    res.setHeader('Cache-Control', 'no-cache,no-transform');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
+    res.flushHeaders();
+
+    try {
+      // Upstream fetch
+      const response = await fetch(DIFY_API_URL, {
+        method: 'POST',
+        headers: {
+          'Accept': 'text/event-stream',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + DIFY_SECRET_KEY
+        },
+        body: JSON.stringify(body),
+        signal: controller.signal,
+        duplex: 'half'
+      });
+
+      clearTimeout(timeoutId);
+
+      // Preflight check
+      const status = response.status;
+      const contentType = response.headers.get('content-type') || '';
+      
+      if (!response.ok || !contentType.includes('text/event-stream')) {
+        // Read up to first 512 bytes of response body
+        let bodyPreview = '';
+        try {
+          if (response.body) {
+            const reader = response.body.getReader();
+            const { value } = await reader.read();
+            if (value) {
+              const decoder = new TextDecoder();
+              const fullText = decoder.decode(value);
+              bodyPreview = fullText.slice(0, 200); // First 200 chars
+            }
+          }
+        } catch (bodyReadError) {
+          bodyPreview = 'Error reading response body';
+        }
+        
+        // Write one NDJSON error line
+        const errorEvent = {
+          event: "error",
+          data: {
+            error: "bad_upstream_status",
+            status: status,
+            contentType: contentType,
+            bodyPreview: bodyPreview,
+            hasUrl: !!DIFY_API_URL,
+            hasKey: !!DIFY_SECRET_KEY
+          }
+        };
+        
+        res.write(JSON.stringify(errorEvent) + '\n');
+        return res.end();
+      }
+
+      // Stream SSE → NDJSON
+      const reader = response.body?.getReader();
+      if (!reader) {
+        const text = await response.text();
+        res.write(JSON.stringify({ event: 'error', data: { error: 'no_reader', text } }) + '\n');
+        return res.end();
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          buffer += chunk;
+
+          // Process complete SSE events (split on \n\n)
+          let sep;
+          while ((sep = buffer.indexOf('\n\n')) !== -1) {
+            const sseChunk = buffer.slice(0, sep);
+            buffer = buffer.slice(sep + 2);
+            
+            // Extract "data:" lines
+            const lines = sseChunk.split('\n');
+            const dataLines = lines
+              .filter(l => l.startsWith('data:'))
+              .map(l => l.slice(5).trim())
+              .filter(Boolean);
+              
+            for (const payload of dataLines) {
+              if (payload === '[DONE]') continue;
+              
+              try {
+                const p = JSON.parse(payload);
+                // For each JSON payload p, write {"event": p.event, "data": p}
+                const ndjsonEvent = { event: p.event, data: p };
+                res.write(JSON.stringify(ndjsonEvent) + '\n');
+              } catch (parseError) {
+                // Fallback for non-JSON data
+                const ndjsonEvent = { event: 'text', data: payload };
+                res.write(JSON.stringify(ndjsonEvent) + '\n');
+              }
+            }
+          }
+        }
+      } catch (streamError) {
+        if (streamError.name === 'AbortError') {
+          const errorEvent = {
+            event: 'error',
+            data: { error: 'timeout', message: 'Stream timeout after 235s' }
+          };
+          res.write(JSON.stringify(errorEvent) + '\n');
+        } else {
+          const errorEvent = {
+            event: 'error',
+            data: { error: 'stream_error', message: streamError.message }
+          };
+          res.write(JSON.stringify(errorEvent) + '\n');
+        }
+      }
+
+      res.end();
+
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      
+      // Extract error properties correctly
+      const errorName = fetchError?.name || fetchError?.constructor?.name || 'Error';
+      const errorCode = fetchError?.code || fetchError?.cause?.code || 'unknown';
+      
+      const errorEvent = {
+        event: 'error',
+        data: {
+          error: 'fetch_error',
+          name: errorName,
+          code: errorCode,
+          message: fetchError.message,
+          hasUrl: !!DIFY_API_URL,
+          hasKey: !!DIFY_SECRET_KEY
+        }
+      };
+      
+      res.write(JSON.stringify(errorEvent) + '\n');
+      res.end();
+    }
+
+  } catch (error) {
+    // Handle route-level errors
+    if (!res.headersSent) {
+      res.setHeader('Content-Type', 'application/x-ndjson');
+    }
+    
+    const errorName = error?.name || error?.constructor?.name || 'Error';
+    const errorCode = error?.code || error?.cause?.code || 'unknown';
+    
+    const errorEvent = {
+      event: 'error',
+      data: {
+        error: 'handler_error',
+        name: errorName,
+        code: errorCode,
+        message: error.message
+      }
+    };
+    
+    res.write(JSON.stringify(errorEvent) + '\n');
+    res.end();
   }
 });
 

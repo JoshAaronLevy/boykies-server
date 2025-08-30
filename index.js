@@ -93,7 +93,11 @@ app.use('/api/draft', (err, req, res, next) => {
 app.use(compression({
   filter: (req, res) => {
     // Skip compression for streaming endpoints and if explicitly marked
-    if (req.path.startsWith('/api/llm/stream') || res.getHeader('X-No-Compression')) {
+    if (req.path.startsWith('/api/llm/stream') ||
+        res.getHeader('X-No-Compression') ||
+        (req.path === '/api/draft/initialize' && req.query.stream) ||
+        (req.originalUrl.includes('/api/draft/initialize') && req.query.stream) ||
+        (req.path === '/api/draft/initialize' && req.headers.accept?.includes('text/event-stream'))) {
       return false;
     }
     // Use compression's default filter for everything else
@@ -111,6 +115,14 @@ console.log('[BOOT]', {
   BODY_LIMIT: process.env.BODY_LIMIT || '5mb',
   BLOCKING_TIMEOUT_MS: process.env.BLOCKING_TIMEOUT_MS || 3000000
 });
+
+// Startup guard - DEV-only environment diagnostics
+if (process.env.NODE_ENV !== 'production') {
+  console.info('[env]', {
+    hasDifyUrl: !!process.env.DIFY_API_URL,
+    difyKeyLen: (process.env.DIFY_SECRET_KEY||'').length
+  });
+}
 
 // Dify API configuration
 const DIFY_API_URL = "https://api.dify.ai/v1/chat-messages";

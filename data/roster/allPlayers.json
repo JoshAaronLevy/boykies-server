@@ -1,0 +1,962 @@
+[
+  {
+    "name": "Lamar Jackson",
+    "position": "QB",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Bal",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Christian McCaffrey",
+    "position": "RB",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "SF",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Kyren Williams",
+    "position": "RB",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "LAR",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Puka Nacua",
+    "position": "WR",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "LAR",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Ladd McConkey",
+    "position": "WR",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "LAC",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Sam LaPorta",
+    "position": "TE",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Det",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Mike Evans",
+    "position": "WR",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "TB",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Brandon Aubrey",
+    "position": "K",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Dal",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Vikings D/ST",
+    "position": "D/ST",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Min",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Omarion Hampton",
+    "position": "RB",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "LAC",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Xavier Worthy",
+    "position": "WR",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "KC",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Zay Flowers",
+    "position": "WR",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Bal",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "C.J. Stroud",
+    "position": "QB",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Hou",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "T.J. Hockenson",
+    "position": "TE",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Min",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Michael Pittman Jr.",
+    "position": "WR",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Ind",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Jaylen Warren",
+    "position": "RB",
+    "fantasyTeam": "Boykies",
+    "team": {
+      "abbr": "Pit",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Joe Burrow",
+    "position": "QB",
+    "team": {
+      "abbr": "Cin",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Jahmyr Gibbs",
+    "position": "RB",
+    "team": {
+      "abbr": "Det",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Chase Brown",
+    "position": "RB",
+    "team": {
+      "abbr": "Cin",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "CeeDee Lamb",
+    "position": "WR",
+    "team": {
+      "abbr": "Dal",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Brian Thomas Jr.",
+    "position": "WR",
+    "team": {
+      "abbr": "Jax",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "George Kittle",
+    "position": "TE",
+    "team": {
+      "abbr": "SF",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Garrett Wilson",
+    "position": "WR",
+    "team": {
+      "abbr": "NYJ",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Cameron Dicker",
+    "position": "K",
+    "team": {
+      "abbr": "LAC",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Steelers D/ST",
+    "position": "D/ST",
+    "team": {
+      "abbr": "Pit",
+      "logoUrl": ""
+    },
+    "starter": true,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "James Conner",
+    "position": "RB",
+    "team": {
+      "abbr": "Ari",
+      "logoUrl": ""
+    },
+    "starter": false,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "DJ Moore",
+    "position": "WR",
+    "team": {
+      "abbr": "Chi",
+      "logoUrl": ""
+    },
+    "starter": false,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Courtland Sutton",
+    "position": "WR",
+    "team": {
+      "abbr": "Den",
+      "logoUrl": ""
+    },
+    "starter": false,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "David Njoku",
+    "position": "TE",
+    "team": {
+      "abbr": "Cle",
+      "logoUrl": ""
+    },
+    "starter": false,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Tyrone Tracy Jr.",
+    "position": "RB",
+    "team": {
+      "abbr": "NYG",
+      "logoUrl": ""
+    },
+    "starter": false,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "RJ Harvey",
+    "position": "RB",
+    "team": {
+      "abbr": "Den",
+      "logoUrl": ""
+    },
+    "starter": false,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Brock Purdy",
+    "position": "QB",
+    "team": {
+      "abbr": "SF",
+      "logoUrl": ""
+    },
+    "starter": false,
+    "fantasyTeam": "Nothin But Net"
+  },
+  {
+    "name": "Jayden Daniels",
+    "position": "QB",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Wsh",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Bijan Robinson",
+    "position": "RB",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Atl",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Jonathan Taylor",
+    "position": "RB",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Ind",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Nico Collins",
+    "position": "WR",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Hou",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "A.J. Brown",
+    "position": "WR",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Phi",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Tucker Kraft",
+    "position": "TE",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "GB",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Breece Hall",
+    "position": "RB",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "NYJ",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Tyler Bass",
+    "position": "K",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Buf",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Broncos D/ST",
+    "position": "D/ST",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Den",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "James Cook",
+    "position": "RB",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Buf",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "D'Andre Swift",
+    "position": "RB",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Chi",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Chuba Hubbard",
+    "position": "RB",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Car",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Baker Mayfield",
+    "position": "QB",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "TB",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Marvin Harrison Jr.",
+    "position": "WR",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Ari",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Evan Engram",
+    "position": "TE",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Den",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Calvin Ridley",
+    "position": "WR",
+    "fantasyTeam": "Rory's Rowdy Team",
+    "team": {
+      "abbr": "Ten",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Josh Allen",
+    "position": "QB",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Buf",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Josh Jacobs",
+    "position": "RB",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "GB",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Tony Pollard",
+    "position": "RB",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Ten",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Davante Adams",
+    "position": "WR",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "LAR",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Jaylen Waddle",
+    "position": "WR",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Mia",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Travis Kelce",
+    "position": "TE",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "KC",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Nick Chubb",
+    "position": "RB",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Hou",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Jake Bates",
+    "position": "K",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Det",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Texans D/ST",
+    "position": "D/ST",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Hou",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Jalen Hurts",
+    "position": "QB",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Phi",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Mark Andrews",
+    "position": "TE",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Bal",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Chris Olave",
+    "position": "WR",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "NO",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Travis Etienne Jr.",
+    "position": "RB",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Jax",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "DeVonta Smith",
+    "position": "WR",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Phi",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Jacory Croskey-Merritt",
+    "position": "RB",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Wsh",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Jameson Williams",
+    "position": "WR",
+    "fantasyTeam": "Who's your Baddie?",
+    "team": {
+      "abbr": "Det",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Patrick Mahomes",
+    "position": "QB",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "KC",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Ashton Jeanty",
+    "position": "RB",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "LV",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Bucky Irving",
+    "position": "RB",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "TB",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Ja'Marr Chase",
+    "position": "WR",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Cin",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Amon-Ra St. Brown",
+    "position": "WR",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Det",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Trey McBride",
+    "position": "TE",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Ari",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Tyreek Hill",
+    "position": "WR",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Mia",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Chase McLaughlin",
+    "position": "K",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "TB",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Ravens D/ST",
+    "position": "D/ST",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Bal",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "De'Von Achane",
+    "position": "RB",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Mia",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Tee Higgins",
+    "position": "WR",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Cin",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Kenneth Walker III",
+    "position": "RB",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Sea",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "DK Metcalf",
+    "position": "WR",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Pit",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Isiah Pacheco",
+    "position": "RB",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "KC",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "David Montgomery",
+    "position": "RB",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Det",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "George Pickens",
+    "position": "WR",
+    "fantasyTeam": "elena's knotty men",
+    "team": {
+      "abbr": "Dal",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Drake Maye",
+    "position": "QB",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "NE",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Saquon Barkley",
+    "position": "RB",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Phi",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Derrick Henry",
+    "position": "RB",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Bal",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Justin Jefferson",
+    "position": "WR",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Min",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Malik Nabers",
+    "position": "WR",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "NYG",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Brock Bowers",
+    "position": "TE",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "LV",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Drake London",
+    "position": "WR",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Atl",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Tyler Loop",
+    "position": "K",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Bal",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Patriots D/ST",
+    "position": "D/ST",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "NE",
+      "logoUrl": ""
+    },
+    "starter": true
+  },
+  {
+    "name": "Terry McLaurin",
+    "position": "WR",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Wsh",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "TreVeyon Henderson",
+    "position": "RB",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "NE",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Alvin Kamara",
+    "position": "RB",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "NO",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Jaxon Smith-Njigba",
+    "position": "WR",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Sea",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Tetairoa McMillan",
+    "position": "WR",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Car",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Jerry Jeudy",
+    "position": "WR",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Cle",
+      "logoUrl": ""
+    },
+    "starter": false
+  },
+  {
+    "name": "Aaron Jones Sr.",
+    "position": "RB",
+    "fantasyTeam": "My Njigbas",
+    "team": {
+      "abbr": "Min",
+      "logoUrl": ""
+    },
+    "starter": false
+  }
+]

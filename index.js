@@ -89,6 +89,12 @@ app.use('/api/draft', (err, req, res, next) => {
   return next(err);
 });
 
+// Mount route-scoped JSON parser for /api/roster
+app.use('/api/roster', express.json({ limit: '1mb' }));
+
+// Mount the roster router
+app.use('/api/roster', require('./routes/roster'));
+
 // Apply compression middleware with conditional logic to skip streaming routes
 app.use(compression({
   filter: (req, res) => {

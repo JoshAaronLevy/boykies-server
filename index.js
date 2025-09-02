@@ -95,6 +95,12 @@ app.use('/api/roster', express.json({ limit: '1mb' }));
 // Mount the roster router
 app.use('/api/roster', require('./routes/roster'));
 
+// Mount route-scoped JSON parser for /api/schedule
+app.use('/api/schedule', express.json({ limit: '1mb' }));
+
+// Mount the schedule router
+app.use('/api/schedule', require('./routes/schedule'));
+
 // Apply compression middleware with conditional logic to skip streaming routes
 app.use(compression({
   filter: (req, res) => {

@@ -2,160 +2,224 @@
   {
     "name": "Lamar Jackson",
     "position": "QB",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Bal",
-      "logoUrl": ""
+      "abbr": "BAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/bal.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Christian McCaffrey",
     "position": "RB",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
       "abbr": "SF",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/sf.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Kyren Williams",
     "position": "RB",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
       "abbr": "LAR",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/lar.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Puka Nacua",
     "position": "WR",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
       "abbr": "LAR",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/lar.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Ladd McConkey",
     "position": "WR",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
       "abbr": "LAC",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/lac.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Sam LaPorta",
     "position": "TE",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Det",
-      "logoUrl": ""
+      "abbr": "DET",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/det.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Mike Evans",
     "position": "WR",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
       "abbr": "TB",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/tb.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Brandon Aubrey",
     "position": "K",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Dal",
-      "logoUrl": ""
+      "abbr": "DAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/dal.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Vikings D/ST",
     "position": "D/ST",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Min",
-      "logoUrl": ""
+      "abbr": "MIN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/min.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Omarion Hampton",
     "position": "RB",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
       "abbr": "LAC",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/lac.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Xavier Worthy",
     "position": "WR",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
       "abbr": "KC",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/kc.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Zay Flowers",
     "position": "WR",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Bal",
-      "logoUrl": ""
+      "abbr": "BAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/bal.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "C.J. Stroud",
     "position": "QB",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Hou",
-      "logoUrl": ""
+      "abbr": "HOU",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/hou.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "T.J. Hockenson",
     "position": "TE",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Min",
-      "logoUrl": ""
+      "abbr": "MIN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/min.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Michael Pittman Jr.",
     "position": "WR",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Ind",
-      "logoUrl": ""
+      "abbr": "IND",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ind.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Jaylen Warren",
     "position": "RB",
-    "fantasyTeam": "Boykies",
+    "fantasyTeam": {
+      "owner": "JL",
+      "name": "Boykies",
+      "endpoint": "boykies"
+    },
     "team": {
-      "abbr": "Pit",
-      "logoUrl": ""
+      "abbr": "PIT",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/pit.png&w=50&h=50"
     },
     "starter": false
   },
@@ -163,799 +227,1119 @@
     "name": "Joe Burrow",
     "position": "QB",
     "team": {
-      "abbr": "Cin",
-      "logoUrl": ""
+      "abbr": "CIN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/cin.png&w=64&h=64"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Jahmyr Gibbs",
     "position": "RB",
     "team": {
-      "abbr": "Det",
-      "logoUrl": ""
+      "abbr": "DET",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/det.png&w=64&h=64"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Chase Brown",
     "position": "RB",
     "team": {
-      "abbr": "Cin",
-      "logoUrl": ""
+      "abbr": "CIN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/cin.png&w=64&h=64"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "CeeDee Lamb",
     "position": "WR",
     "team": {
-      "abbr": "Dal",
-      "logoUrl": ""
+      "abbr": "DAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/dal.png&w=64&h=64"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Brian Thomas Jr.",
     "position": "WR",
     "team": {
-      "abbr": "Jax",
-      "logoUrl": ""
+      "abbr": "JAX",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/jax.png&w=64&h=64"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "George Kittle",
     "position": "TE",
     "team": {
       "abbr": "SF",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/sf.png&w=64&h=64"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Garrett Wilson",
     "position": "WR",
     "team": {
       "abbr": "NYJ",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&w=64&h=64"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Cameron Dicker",
     "position": "K",
     "team": {
       "abbr": "LAC",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/lac.png&w=64&h=64"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Steelers D/ST",
     "position": "D/ST",
     "team": {
-      "abbr": "Pit",
-      "logoUrl": ""
+      "abbr": "PIT",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/pit.png&w=50&h=50"
     },
     "starter": true,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "James Conner",
     "position": "RB",
     "team": {
-      "abbr": "Ari",
-      "logoUrl": ""
+      "abbr": "ARI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ari.png&w=64&h=64"
     },
     "starter": false,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "DJ Moore",
     "position": "WR",
     "team": {
-      "abbr": "Chi",
-      "logoUrl": ""
+      "abbr": "CHI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/chi.png&w=64&h=64"
     },
     "starter": false,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Courtland Sutton",
     "position": "WR",
     "team": {
-      "abbr": "Den",
-      "logoUrl": ""
+      "abbr": "DEN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/den.png&w=64&h=64"
     },
     "starter": false,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "David Njoku",
     "position": "TE",
     "team": {
-      "abbr": "Cle",
-      "logoUrl": ""
+      "abbr": "CLE",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/cle.png&w=50&h=50"
     },
     "starter": false,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Tyrone Tracy Jr.",
     "position": "RB",
     "team": {
       "abbr": "NYG",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyg.png&w=64&h=64"
     },
     "starter": false,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "RJ Harvey",
     "position": "RB",
     "team": {
-      "abbr": "Den",
-      "logoUrl": ""
+      "abbr": "DEN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/den.png&w=64&h=64"
     },
     "starter": false,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Brock Purdy",
     "position": "QB",
     "team": {
       "abbr": "SF",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/sf.png&w=64&h=64"
     },
     "starter": false,
-    "fantasyTeam": "Nothin But Net"
+    "fantasyTeam": {
+      "owner": "ML",
+      "name": "Nothin But Net",
+      "endpoint": "nothin-but-net"
+    }
   },
   {
     "name": "Jayden Daniels",
     "position": "QB",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Wsh",
-      "logoUrl": ""
+      "abbr": "WSH",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/was.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Bijan Robinson",
     "position": "RB",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Atl",
-      "logoUrl": ""
+      "abbr": "ATL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/atl.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Jonathan Taylor",
     "position": "RB",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Ind",
-      "logoUrl": ""
+      "abbr": "IND",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ind.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Nico Collins",
     "position": "WR",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Hou",
-      "logoUrl": ""
+      "abbr": "HOU",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/hou.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "A.J. Brown",
     "position": "WR",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Phi",
-      "logoUrl": ""
+      "abbr": "PHI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/phi.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Tucker Kraft",
     "position": "TE",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
       "abbr": "GB",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/gb.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Breece Hall",
     "position": "RB",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
       "abbr": "NYJ",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyj.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Tyler Bass",
     "position": "K",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Buf",
-      "logoUrl": ""
+      "abbr": "BUF",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/buf.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Broncos D/ST",
     "position": "D/ST",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Den",
-      "logoUrl": ""
+      "abbr": "DEN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/den.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "James Cook",
     "position": "RB",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Buf",
-      "logoUrl": ""
+      "abbr": "BUF",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/buf.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "D'Andre Swift",
     "position": "RB",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Chi",
-      "logoUrl": ""
+      "abbr": "CHI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/chi.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Chuba Hubbard",
     "position": "RB",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Car",
-      "logoUrl": ""
+      "abbr": "CAR",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/car.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Baker Mayfield",
     "position": "QB",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
       "abbr": "TB",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/tb.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Marvin Harrison Jr.",
     "position": "WR",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Ari",
-      "logoUrl": ""
+      "abbr": "ARI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ari.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Evan Engram",
     "position": "TE",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Den",
-      "logoUrl": ""
+      "abbr": "DEN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/den.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Calvin Ridley",
     "position": "WR",
-    "fantasyTeam": "Rory's Rowdy Team",
+    "fantasyTeam": {
+      "owner": "RH",
+      "name": "Rory's Rowdy Team",
+      "endpoint": "rorys-rowdy-team"
+    },
     "team": {
-      "abbr": "Ten",
-      "logoUrl": ""
+      "abbr": "TEN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ten.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Josh Allen",
     "position": "QB",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Buf",
-      "logoUrl": ""
+      "abbr": "BUF",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/buf.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Josh Jacobs",
     "position": "RB",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
       "abbr": "GB",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/gb.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Tony Pollard",
     "position": "RB",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Ten",
-      "logoUrl": ""
+      "abbr": "TEN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ten.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Davante Adams",
     "position": "WR",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
       "abbr": "LAR",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/lar.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Jaylen Waddle",
     "position": "WR",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Mia",
-      "logoUrl": ""
+      "abbr": "MIA",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/mia.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Travis Kelce",
     "position": "TE",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
       "abbr": "KC",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/kc.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Nick Chubb",
     "position": "RB",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Hou",
-      "logoUrl": ""
+      "abbr": "HOU",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/hou.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Jake Bates",
     "position": "K",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Det",
-      "logoUrl": ""
+      "abbr": "DET",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/det.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Texans D/ST",
     "position": "D/ST",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Hou",
-      "logoUrl": ""
+      "abbr": "HOU",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/hou.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Jalen Hurts",
     "position": "QB",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Phi",
-      "logoUrl": ""
+      "abbr": "PHI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/phi.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Mark Andrews",
     "position": "TE",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Bal",
-      "logoUrl": ""
+      "abbr": "BAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/bal.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Chris Olave",
     "position": "WR",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
       "abbr": "NO",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/no.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Travis Etienne Jr.",
     "position": "RB",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Jax",
-      "logoUrl": ""
+      "abbr": "JAX",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/jax.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "DeVonta Smith",
     "position": "WR",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Phi",
-      "logoUrl": ""
+      "abbr": "PHI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/phi.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Jacory Croskey-Merritt",
     "position": "RB",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Wsh",
-      "logoUrl": ""
+      "abbr": "WSH",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/was.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Jameson Williams",
     "position": "WR",
-    "fantasyTeam": "Who's your Baddie?",
+    "fantasyTeam": {
+      "owner": "LH",
+      "name": "Who's your Baddie?",
+      "endpoint": "whos-your-baddie"
+    },
     "team": {
-      "abbr": "Det",
-      "logoUrl": ""
+      "abbr": "DET",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/det.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Patrick Mahomes",
     "position": "QB",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
       "abbr": "KC",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/kc.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Ashton Jeanty",
     "position": "RB",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
       "abbr": "LV",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/lv.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Bucky Irving",
     "position": "RB",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
       "abbr": "TB",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/tb.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Ja'Marr Chase",
     "position": "WR",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Cin",
-      "logoUrl": ""
+      "abbr": "CIN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/cin.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Amon-Ra St. Brown",
     "position": "WR",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Det",
-      "logoUrl": ""
+      "abbr": "DET",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/det.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Trey McBride",
     "position": "TE",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Ari",
-      "logoUrl": ""
+      "abbr": "ARI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ari.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Tyreek Hill",
     "position": "WR",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Mia",
-      "logoUrl": ""
+      "abbr": "MIA",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/mia.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Chase McLaughlin",
     "position": "K",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
       "abbr": "TB",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/tb.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Ravens D/ST",
     "position": "D/ST",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Bal",
-      "logoUrl": ""
+      "abbr": "BAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/bal.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "De'Von Achane",
     "position": "RB",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Mia",
-      "logoUrl": ""
+      "abbr": "MIA",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/mia.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Tee Higgins",
     "position": "WR",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Cin",
-      "logoUrl": ""
+      "abbr": "CIN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/cin.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Kenneth Walker III",
     "position": "RB",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Sea",
-      "logoUrl": ""
+      "abbr": "SEA",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/sea.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "DK Metcalf",
     "position": "WR",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Pit",
-      "logoUrl": ""
+      "abbr": "PIT",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/pit.png&w=50&h=50"
     },
     "starter": false
   },
   {
     "name": "Isiah Pacheco",
     "position": "RB",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
       "abbr": "KC",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/kc.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "David Montgomery",
     "position": "RB",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Det",
-      "logoUrl": ""
+      "abbr": "DET",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/det.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "George Pickens",
     "position": "WR",
-    "fantasyTeam": "elena's knotty men",
+    "fantasyTeam": {
+      "owner": "EM",
+      "name": "elena's knotty men",
+      "endpoint": "elenas-knotty-men"
+    },
     "team": {
-      "abbr": "Dal",
-      "logoUrl": ""
+      "abbr": "DAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/dal.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Drake Maye",
     "position": "QB",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
       "abbr": "NE",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ne.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Saquon Barkley",
     "position": "RB",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Phi",
-      "logoUrl": ""
+      "abbr": "PHI",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/phi.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Derrick Henry",
     "position": "RB",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Bal",
-      "logoUrl": ""
+      "abbr": "BAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/bal.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Justin Jefferson",
     "position": "WR",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Min",
-      "logoUrl": ""
+      "abbr": "MIN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/min.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Malik Nabers",
     "position": "WR",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
       "abbr": "NYG",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/nyg.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Brock Bowers",
     "position": "TE",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
       "abbr": "LV",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/lv.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Drake London",
     "position": "WR",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Atl",
-      "logoUrl": ""
+      "abbr": "ATL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/atl.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Tyler Loop",
     "position": "K",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Bal",
-      "logoUrl": ""
+      "abbr": "BAL",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/bal.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Patriots D/ST",
     "position": "D/ST",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
       "abbr": "NE",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ne.png&w=64&h=64"
     },
     "starter": true
   },
   {
     "name": "Terry McLaurin",
     "position": "WR",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Wsh",
-      "logoUrl": ""
+      "abbr": "WSH",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/was.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "TreVeyon Henderson",
     "position": "RB",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
       "abbr": "NE",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/ne.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Alvin Kamara",
     "position": "RB",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
       "abbr": "NO",
-      "logoUrl": ""
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/no.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Jaxon Smith-Njigba",
     "position": "WR",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Sea",
-      "logoUrl": ""
+      "abbr": "SEA",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/sea.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Tetairoa McMillan",
     "position": "WR",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Car",
-      "logoUrl": ""
+      "abbr": "CAR",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/car.png&w=64&h=64"
     },
     "starter": false
   },
   {
     "name": "Jerry Jeudy",
     "position": "WR",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Cle",
-      "logoUrl": ""
+      "abbr": "CLE",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/cle.png&w=50&h=50"
     },
     "starter": false
   },
   {
     "name": "Aaron Jones Sr.",
     "position": "RB",
-    "fantasyTeam": "My Njigbas",
+    "fantasyTeam": {
+      "owner": "DE",
+      "name": "My Njigbas",
+      "endpoint": "my-njigbas"
+    },
     "team": {
-      "abbr": "Min",
-      "logoUrl": ""
+      "abbr": "MIN",
+      "logoUrl": "https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/min.png&w=64&h=64"
     },
     "starter": false
   }

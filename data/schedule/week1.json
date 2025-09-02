@@ -1,0 +1,130 @@
+[
+  {
+    "id": 1001,
+    "homeTeam": "PHI",
+    "awayTeam": "DAL",
+    "kickoff": "2025-09-04T20:20:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1002,
+    "homeTeam": "LAC",
+    "awayTeam": "KC",
+    "kickoff": "2025-09-05T17:00:00-07:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1003,
+    "homeTeam": "ATL",
+    "awayTeam": "TB",
+    "kickoff": "2025-09-07T13:00:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1004,
+    "homeTeam": "CLE",
+    "awayTeam": "CIN",
+    "kickoff": "2025-09-07T13:00:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1005,
+    "homeTeam": "IND",
+    "awayTeam": "MIA",
+    "kickoff": "2025-09-07T13:00:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1006,
+    "homeTeam": "JAX",
+    "awayTeam": "CAR",
+    "kickoff": "2025-09-07T13:00:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1007,
+    "homeTeam": "NE",
+    "awayTeam": "LV",
+    "kickoff": "2025-09-07T13:00:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1008,
+    "homeTeam": "NO",
+    "awayTeam": "ARI",
+    "kickoff": "2025-09-07T12:00:00-05:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1009,
+    "homeTeam": "NYJ",
+    "awayTeam": "PIT",
+    "kickoff": "2025-09-07T13:00:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1010,
+    "homeTeam": "WAS",
+    "awayTeam": "NYG",
+    "kickoff": "2025-09-07T13:00:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1011,
+    "homeTeam": "DEN",
+    "awayTeam": "TEN",
+    "kickoff": "2025-09-07T14:05:00-06:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1012,
+    "homeTeam": "SEA",
+    "awayTeam": "SF",
+    "kickoff": "2025-09-07T13:05:00-07:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1013,
+    "homeTeam": "GB",
+    "awayTeam": "DET",
+    "kickoff": "2025-09-07T15:25:00-05:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1014,
+    "homeTeam": "LAR",
+    "awayTeam": "HOU",
+    "kickoff": "2025-09-07T13:25:00-07:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1015,
+    "homeTeam": "BUF",
+    "awayTeam": "BAL",
+    "kickoff": "2025-09-07T20:20:00-04:00",
+    "projectedScore": "",
+    "finalScore": ""
+  },
+  {
+    "id": 1016,
+    "homeTeam": "CHI",
+    "awayTeam": "MIN",
+    "kickoff": "2025-09-08T19:15:00-05:00",
+    "projectedScore": "",
+    "finalScore": ""
+  }
+]

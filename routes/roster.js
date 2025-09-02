@@ -8,6 +8,71 @@ const router = express.Router();
 // Initialize UnifiedDifyClient
 const difyClient = new UnifiedDifyClient();
 
+// Cache for schedule data
+let scheduleCache = null;
+
+// Team alias mapping for schedule matching
+const TEAM_ALIASES = {
+  'WAS': 'WSH', 'WSH': 'WAS',
+  'JAX': 'JAC', 'JAC': 'JAX',
+  'NO': 'NOR', 'NOR': 'NO',
+  'SF': 'SFO', 'SFO': 'SF',
+  'GB': 'GNB', 'GNB': 'GB',
+  'KC': 'KAN', 'KAN': 'KC',
+  'TB': 'TAM', 'TAM': 'TB',
+  'NE': 'NWE', 'NWE': 'NE',
+  'LV': 'LVR', 'LVR': 'LV',
+  'LAR': 'LA', 'LA': 'LAR'
+};
+
+/**
+ * Load and cache schedule data
+ */
+function loadScheduleData() {
+  if (!scheduleCache) {
+    try {
+      const schedulePath = path.join(__dirname, '..', 'data', 'schedule', 'regularSeason.json');
+      const scheduleData = fs.readFileSync(schedulePath, 'utf8');
+      scheduleCache = JSON.parse(scheduleData);
+    } catch (error) {
+      console.error('[ROSTER] Error loading schedule data:', error.message);
+      throw error;
+    }
+  }
+  return scheduleCache;
+}
+
+/**
+ * Find matchup for a team in a specific week
+ */
+function findMatchupForTeam(weekSchedule, teamAbbr) {
+  if (!weekSchedule || !Array.isArray(weekSchedule)) {
+    return null;
+  }
+
+  // Convert to uppercase for comparison
+  const upperTeamAbbr = teamAbbr.toUpperCase();
+  
+  // Find matchup where team is either home or away (considering aliases)
+  return weekSchedule.find(game => {
+    const homeTeam = game.homeTeam.toUpperCase();
+    const awayTeam = game.awayTeam.toUpperCase();
+    
+    // Direct match
+    if (homeTeam === upperTeamAbbr || awayTeam === upperTeamAbbr) {
+      return true;
+    }
+    
+    // Check aliases
+    const teamAlias = TEAM_ALIASES[upperTeamAbbr];
+    if (teamAlias) {
+      return homeTeam === teamAlias || awayTeam === teamAlias;
+    }
+    
+    return false;
+  });
+}
+
 // GET /allPlayers - Serves the JSON data from data/roster/allPlayers.json
 router.get('/allPlayers', async (req, res) => {
   try {
@@ -417,6 +482,144 @@ router.post('/analyze', async (req, res) => {
       ok: false,
       error: 'handler_error',
       message: error.message || 'Internal server error'
+    });
+  }
+});
+
+// GET /:teamName/matchups/:weekNumber - Returns players with matchup info for a specific week
+router.get('/:teamName/matchups/:weekNumber', async (req, res) => {
+  try {
+    const { teamName, weekNumber } = req.params;
+    const week = parseInt(weekNumber, 10);
+    
+    // Validate weekNumber
+    if (!weekNumber || isNaN(week) || week < 1 || week > 18) {
+      return res.status(400).json({
+        ok: false,
+        error: 'bad_request',
+        message: 'weekNumber must be 1-18'
+      });
+    }
+    
+    // Validate teamName
+    if (!teamName || teamName.trim() === '') {
+      return res.status(400).json({
+        ok: false,
+        error: 'bad_request',
+        message: 'teamName is required'
+      });
+    }
+    
+    // Read allPlayers.json
+    const playersPath = path.join(__dirname, '..', 'data', 'roster', 'allPlayers.json');
+    const playersData = fs.readFileSync(playersPath, 'utf8');
+    const allPlayers = JSON.parse(playersData);
+    
+    // Filter players by team
+    const teamPlayers = allPlayers.filter(player =>
+      player.fantasyTeam &&
+      player.fantasyTeam.endpoint === teamName
+    );
+    
+    // Check if any players found
+    if (teamPlayers.length === 0) {
+      return res.status(404).json({
+        ok: false,
+        error: 'not_found',
+        message: 'roster not found'
+      });
+    }
+    
+    // Load schedule data
+    let schedule;
+    try {
+      schedule = loadScheduleData();
+    } catch (error) {
+      return res.status(500).json({
+        ok: false,
+        error: 'handler_error',
+        message: 'Failed to load schedule data'
+      });
+    }
+    
+    // Get week schedule
+    const weekKey = `week${week}`;
+    const weekSchedule = schedule[weekKey];
+    
+    if (!weekSchedule) {
+      return res.status(404).json({
+        ok: false,
+        error: 'not_found',
+        message: 'schedule for week not found'
+      });
+    }
+    
+    // Clone players and add matchup info
+    const playersWithMatchups = teamPlayers.map(player => {
+      // Clone player to avoid mutating original data
+      const playerWithMatchup = { ...player };
+      
+      // Get player's team abbreviation
+      const playerTeamAbbr = player.team && player.team.abbr ? player.team.abbr : '';
+      
+      if (!playerTeamAbbr) {
+        // No team info, assume bye week
+        playerWithMatchup.matchup = {
+          week: week,
+          bye: true
+        };
+      } else {
+        // Find matchup for player's team
+        const matchup = findMatchupForTeam(weekSchedule, playerTeamAbbr);
+        
+        if (matchup) {
+          // Found matchup
+          playerWithMatchup.matchup = {
+            week: matchup.week,
+            homeTeam: matchup.homeTeam,
+            awayTeam: matchup.awayTeam,
+            kickoff: matchup.kickoff,
+            projectedScore: matchup.projectedScore,
+            finalScore: matchup.finalScore
+          };
+        } else {
+          // No matchup found, it's a bye week
+          playerWithMatchup.matchup = {
+            week: week,
+            bye: true
+          };
+        }
+      }
+      
+      return playerWithMatchup;
+    });
+    
+    // Return players with matchups
+    res.json(playersWithMatchups);
+    
+  } catch (error) {
+    console.error(`[ROSTER] Error in matchups endpoint:`, error.message);
+    
+    // Handle specific errors
+    if (error.code === 'ENOENT') {
+      return res.status(500).json({
+        ok: false,
+        error: 'handler_error',
+        message: 'Required data files not found'
+      });
+    } else if (error instanceof SyntaxError) {
+      return res.status(500).json({
+        ok: false,
+        error: 'handler_error',
+        message: 'Invalid data format in files'
+      });
+    }
+    
+    // Generic error
+    res.status(500).json({
+      ok: false,
+      error: 'handler_error',
+      message: 'Internal server error'
     });
   }
 });

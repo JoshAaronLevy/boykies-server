@@ -609,10 +609,10 @@ const server = app.listen(PORT, () => {
   console.log(`Streaming enabled: ${process.env.STREAMING_ENABLED === 'true'}`);
 });
 
-// Configure server timeouts for blocking and streaming requests
-server.setTimeout(Number(process.env.BLOCKING_TIMEOUT_MS || 3000000));
-server.headersTimeout = Number(process.env.BLOCKING_TIMEOUT_MS || 3000000) + 100000;
-server.keepAliveTimeout = Number(process.env.SERVER_KEEPALIVE_TIMEOUT_MS || 3000000);
+// Allow long-running blocking requests
+server.requestTimeout = 0;      // no per-request inactive timeout
+server.headersTimeout = 0;      // no header timeout (safe for trusted internal use)
+server.keepAliveTimeout = 65000; // default-ish; just ensure > client keep-alive
 
 /*
  * REVERSE PROXY CONFIGURATION NOTES:
